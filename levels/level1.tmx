@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="6" nextobjectid="1">
+ <tileset firstgid="1" name="platforms" tilewidth="562" tileheight="508" tilecount="111" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image width="128" height="128" source="../assets/images/tilesets/1.png"/>
+  </tile>
+  <tile id="1">
+   <image width="128" height="128" source="../assets/images/tilesets/2.png"/>
+  </tile>
+  <tile id="2">
+   <image width="128" height="128" source="../assets/images/tilesets/3.png"/>
+  </tile>
+  <tile id="3">
+   <image width="129" height="129" source="../assets/images/tilesets/4.png"/>
+  </tile>
+  <tile id="4">
+   <image width="128" height="128" source="../assets/images/tilesets/5.png"/>
+  </tile>
+  <tile id="5">
+   <image width="128" height="128" source="../assets/images/tilesets/6.png"/>
+  </tile>
+  <tile id="6">
+   <image width="128" height="128" source="../assets/images/tilesets/7.png"/>
+  </tile>
+  <tile id="7">
+   <image width="128" height="128" source="../assets/images/tilesets/8.png"/>
+  </tile>
+  <tile id="8">
+   <image width="128" height="128" source="../assets/images/tilesets/9.png"/>
+  </tile>
+  <tile id="9">
+   <image width="128" height="128" source="../assets/images/tilesets/10.png"/>
+  </tile>
+  <tile id="10">
+   <image width="128" height="128" source="../assets/images/tilesets/11.png"/>
+  </tile>
+  <tile id="11">
+   <image width="128" height="128" source="../assets/images/tilesets/12.png"/>
+  </tile>
+  <tile id="12">
+   <image width="128" height="93" source="../assets/images/tilesets/13.png"/>
+  </tile>
+  <tile id="13">
+   <image width="128" height="93" source="../assets/images/tilesets/14.png"/>
+  </tile>
+  <tile id="14">
+   <image width="128" height="93" source="../assets/images/tilesets/15.png"/>
+  </tile>
+  <tile id="15">
+   <image width="128" height="128" source="../assets/images/tilesets/16.png"/>
+  </tile>
+  <tile id="16">
+   <image width="128" height="99" source="../assets/images/tilesets/17.png"/>
+  </tile>
+  <tile id="17">
+   <image width="128" height="128" source="../assets/images/tilesets/18.png"/>
+  </tile>
+  <tile id="18">
+   <image width="128" height="128" source="../assets/images/tilesets/grass.png"/>
+  </tile>
+  <tile id="19">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCenter.png"/>
+  </tile>
+  <tile id="20">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCenter_round.png"/>
+  </tile>
+  <tile id="21">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCliff_left.png"/>
+  </tile>
+  <tile id="22">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCliff_right.png"/>
+  </tile>
+  <tile id="23">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCliffAlt_left.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="128" y="0">
+     <polygon points="0,0 0,128 -127,44 -128,0 0,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCliffAlt_right.png"/>
+  </tile>
+  <tile id="25">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCorner_left.png"/>
+  </tile>
+  <tile id="26">
+   <image width="128" height="128" source="../assets/images/tilesets/grassCorner_right.png"/>
+  </tile>
+  <tile id="27">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHalf.png"/>
+  </tile>
+  <tile id="28">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHalf_left.png"/>
+  </tile>
+  <tile id="29">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHalf_mid.png"/>
+  </tile>
+  <tile id="30">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHalf_right.png"/>
+  </tile>
+  <tile id="31">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHill_left.png"/>
+  </tile>
+  <tile id="32">
+   <image width="128" height="128" source="../assets/images/tilesets/grassHill_right.png"/>
+  </tile>
+  <tile id="33">
+   <image width="128" height="128" source="../assets/images/tilesets/grassLeft.png"/>
+  </tile>
+  <tile id="34">
+   <image width="128" height="128" source="../assets/images/tilesets/grassMid.png"/>
+  </tile>
+  <tile id="35">
+   <image width="128" height="128" source="../assets/images/tilesets/grassRight.png"/>
+  </tile>
+  <tile id="36">
+   <image width="128" height="128" source="../assets/images/objects/boxCrate.png"/>
+  </tile>
+  <tile id="37">
+   <image width="128" height="128" source="../assets/images/objects/boxCrate_double.png"/>
+  </tile>
+  <tile id="38">
+   <image width="128" height="128" source="../assets/images/objects/boxCrate_single.png"/>
+  </tile>
+  <tile id="39">
+   <image width="128" height="128" source="../assets/images/objects/brickBrown.png"/>
+  </tile>
+  <tile id="40">
+   <image width="128" height="128" source="../assets/images/objects/bridgeA.png"/>
+  </tile>
+  <tile id="41">
+   <image width="128" height="128" source="../assets/images/objects/bridgeB.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 -1,49 127,49 128,0 0,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="42">
+   <image width="133" height="65" source="../assets/images/objects/Bush (1).png"/>
+  </tile>
+  <tile id="43">
+   <image width="133" height="65" source="../assets/images/objects/Bush (2).png"/>
+  </tile>
+  <tile id="44">
+   <image width="73" height="47" source="../assets/images/objects/Bush (3).png"/>
+  </tile>
+  <tile id="45">
+   <image width="73" height="46" source="../assets/images/objects/Bush (4).png"/>
+  </tile>
+  <tile id="46">
+   <image width="128" height="128" source="../assets/images/objects/bush.png"/>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="128">
+     <polygon points="0,0 128,0 128,-80 -1,-80 0,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="47">
+   <image width="240" height="120" source="../assets/images/objects/bush1.png"/>
+  </tile>
+  <tile id="48">
+   <image width="105" height="88" source="../assets/images/objects/bush2.png"/>
+  </tile>
+  <tile id="49">
+   <image width="117" height="104" source="../assets/images/objects/bush3.png"/>
+  </tile>
+  <tile id="50">
+   <image width="100" height="92" source="../assets/images/objects/bush4.png"/>
+  </tile>
+  <tile id="51">
+   <image width="282" height="95" source="../assets/images/objects/bushAlt1.png"/>
+  </tile>
+  <tile id="52">
+   <image width="90" height="110" source="../assets/images/objects/bushAlt2.png"/>
+  </tile>
+  <tile id="53">
+   <image width="87" height="105" source="../assets/images/objects/bushAlt3.png"/>
+  </tile>
+  <tile id="54">
+   <image width="100" height="96" source="../assets/images/objects/bushAlt4.png"/>
+  </tile>
+  <tile id="55">
+   <image width="128" height="128" source="../assets/images/objects/cactus.png"/>
+  </tile>
+  <tile id="56">
+   <image width="192" height="278" source="../assets/images/objects/cactus1.png"/>
+  </tile>
+  <tile id="57">
+   <image width="141" height="270" source="../assets/images/objects/cactus2.png"/>
+  </tile>
+  <tile id="58">
+   <image width="136" height="266" source="../assets/images/objects/cactus3.png"/>
+  </tile>
+  <tile id="59">
+   <image width="216" height="170" source="../assets/images/objects/castleSmall.png"/>
+  </tile>
+  <tile id="60">
+   <image width="406" height="242" source="../assets/images/objects/cloud1.png"/>
+  </tile>
+  <tile id="61">
+   <image width="392" height="312" source="../assets/images/objects/cloud2.png"/>
+  </tile>
+  <tile id="62">
+   <image width="432" height="278" source="../assets/images/objects/cloud3.png"/>
+  </tile>
+  <tile id="63">
+   <image width="500" height="292" source="../assets/images/objects/cloud4.png"/>
+  </tile>
+  <tile id="64">
+   <image width="406" height="242" source="../assets/images/objects/cloud5.png"/>
+  </tile>
+  <tile id="65">
+   <image width="392" height="312" source="../assets/images/objects/cloud6.png"/>
+  </tile>
+  <tile id="66">
+   <image width="432" height="278" source="../assets/images/objects/cloud7.png"/>
+  </tile>
+  <tile id="67">
+   <image width="500" height="292" source="../assets/images/objects/cloud8.png"/>
+  </tile>
+  <tile id="68">
+   <image width="77" height="77" source="../assets/images/objects/Crate.png"/>
+  </tile>
+  <tile id="69">
+   <image width="207" height="155" source="../assets/images/objects/fence.png"/>
+  </tile>
+  <tile id="70">
+   <image width="128" height="128" source="../assets/images/objects/grass_sprout.png"/>
+  </tile>
+  <tile id="71">
+   <image width="415" height="448" source="../assets/images/objects/house1.png"/>
+  </tile>
+  <tile id="72">
+   <image width="562" height="434" source="../assets/images/objects/house2.png"/>
+  </tile>
+  <tile id="73">
+   <image width="335" height="448" source="../assets/images/objects/houseAlt1.png"/>
+  </tile>
+  <tile id="74">
+   <image width="482" height="434" source="../assets/images/objects/houseAlt2.png"/>
+  </tile>
+  <tile id="75">
+   <image width="150" height="100" source="../assets/images/objects/houseSmall1.png"/>
+  </tile>
+  <tile id="76">
+   <image width="153" height="140" source="../assets/images/objects/houseSmall2.png"/>
+  </tile>
+  <tile id="77">
+   <image width="150" height="100" source="../assets/images/objects/houseSmallAlt1.png"/>
+  </tile>
+  <tile id="78">
+   <image width="153" height="140" source="../assets/images/objects/houseSmallAlt2.png"/>
+  </tile>
+  <tile id="79">
+   <image width="128" height="128" source="../assets/images/objects/ladderMid.png"/>
+  </tile>
+  <tile id="80">
+   <image width="128" height="128" source="../assets/images/objects/ladderTop.png"/>
+  </tile>
+  <tile id="81">
+   <image width="49" height="41" source="../assets/images/objects/Mushroom_1.png"/>
+  </tile>
+  <tile id="82">
+   <image width="50" height="41" source="../assets/images/objects/Mushroom_2.png"/>
+  </tile>
+  <tile id="83">
+   <image width="63" height="65" source="../assets/images/objects/Sign_1.png"/>
+  </tile>
+  <tile id="84">
+   <image width="62" height="64" source="../assets/images/objects/Sign_2.png"/>
+  </tile>
+  <tile id="85">
+   <image width="128" height="128" source="../assets/images/objects/signExit.png"/>
+  </tile>
+  <tile id="86">
+   <image width="128" height="128" source="../assets/images/objects/signLeft.png"/>
+  </tile>
+  <tile id="87">
+   <image width="128" height="128" source="../assets/images/objects/signRight.png"/>
+  </tile>
+  <tile id="88">
+   <image width="128" height="128" source="../assets/images/objects/spikes.png"/>
+  </tile>
+  <tile id="89">
+   <image width="90" height="54" source="../assets/images/objects/Stone.png"/>
+  </tile>
+  <tile id="90">
+   <image width="146" height="490" source="../assets/images/objects/tower.png"/>
+  </tile>
+  <tile id="91">
+   <image width="76" height="180" source="../assets/images/objects/towerSmall.png"/>
+  </tile>
+  <tile id="92">
+   <image width="76" height="180" source="../assets/images/objects/towerSmallAlt.png"/>
+  </tile>
+  <tile id="93">
+   <image width="188" height="408" source="../assets/images/objects/tree.png"/>
+  </tile>
+  <tile id="94">
+   <image width="116" height="44" source="../assets/images/objects/Tree_1.png"/>
+  </tile>
+  <tile id="95">
+   <image width="282" height="301" source="../assets/images/objects/Tree_2.png"/>
+  </tile>
+  <tile id="96">
+   <image width="282" height="275" source="../assets/images/objects/Tree_3.png"/>
+  </tile>
+  <tile id="97">
+   <image width="343" height="493" source="../assets/images/objects/treeDead.png"/>
+  </tile>
+  <tile id="98">
+   <image width="163" height="498" source="../assets/images/objects/treeLong.png"/>
+  </tile>
+  <tile id="99">
+   <image width="163" height="498" source="../assets/images/objects/treeLongOrange.png"/>
+  </tile>
+  <tile id="100">
+   <image width="163" height="478" source="../assets/images/objects/treeLongSnow.png"/>
+  </tile>
+  <tile id="101">
+   <image width="400" height="476" source="../assets/images/objects/treePalm.png"/>
+  </tile>
+  <tile id="102">
+   <image width="212" height="508" source="../assets/images/objects/treePine.png"/>
+  </tile>
+  <tile id="103">
+   <image width="212" height="494" source="../assets/images/objects/treePineSnow.png"/>
+  </tile>
+  <tile id="104">
+   <image width="40" height="86" source="../assets/images/objects/treeSmall_green1.png"/>
+  </tile>
+  <tile id="105">
+   <image width="46" height="136" source="../assets/images/objects/treeSmall_green2.png"/>
+  </tile>
+  <tile id="106">
+   <image width="60" height="98" source="../assets/images/objects/treeSmall_green3.png"/>
+  </tile>
+  <tile id="107">
+   <image width="40" height="86" source="../assets/images/objects/treeSmall_greenAlt1.png"/>
+  </tile>
+  <tile id="108">
+   <image width="46" height="130" source="../assets/images/objects/treeSmall_greenAlt2.png"/>
+  </tile>
+  <tile id="109">
+   <image width="60" height="98" source="../assets/images/objects/treeSmall_greenAlt3.png"/>
+  </tile>
+  <tile id="110">
+   <image width="202" height="462" source="../assets/images/objects/treeSnow.png"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="Platforms" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztkcEKgzAMhjs9baAexnRDt7HDBvONfP8XMR7En9BDl9YURj74wJaY/KHOGYZhGEYcV/IM3pTmvpXmpOJOPsgJXM7PnKF+ZITvI4hUZA02OtGC+SrOWd2jd87/OUPifin5eO5a8gJ2qonCeZG923JKyfk+fIeYPRDNnXw7LB7IQiBHWsPrJFlK8iSUE1Ib0kua51+cAfvuCcc=
+  </data>
+ </layer>
+ <layer id="2" name="Ladders" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt0dEJACAMQ8GO6P7TuEC/RLDEuwnySBUAnFuvB1yiY5aUDnop/+qYJaWDv204gQKB
+  </data>
+ </layer>
+ <layer id="3" name="Backgrounds" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFIwk40Nk+ZxLV29HEFcMfuAy0A4YpIDX9kgMSobQ/FPuQYYYT9ZwzaIENEWrsae4KBHCgkbn5SOwkGtkxCkbBKBgFgxnEQ3E2FGdQ2fxkIsRTGEbL4FEwcAAAW3YH6g==
+  </data>
+ </layer>
+ <layer id="4" name="Foregrounds" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztzjEBAAAIA6DFtH8SW0wPSEACAADQNdcBeGgBH+8AWQ==
+  </data>
+ </layer>
+ <layer id="5" name="Don't-Touch" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztz7sJACAQRMFrQbuz/0ZMjET8JJc4Ay9d2AgAAAAylKmVNnrZylandk5/bnd+0AHA7QJa
+  </data>
+ </layer>
+</map>
