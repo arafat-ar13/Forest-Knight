@@ -1,4 +1,4 @@
-""" Script that loads a given level of the game"""
+""" Module that loads a given level of the game"""
 
 import arcade
 
@@ -54,4 +54,11 @@ def level_loader(level):
                                               scaling=TILE_SCALE,
                                               use_spatial_hash=True)
 
-    return [platforms, foregrounds, backgrounds, ladders, dont_touch]
+    loaded_layers_dict = {
+        "Platforms": platforms,
+        "Foregrounds": foregrounds,
+        "Backgrounds": backgrounds,
+        "Ladders": ladders,
+        "Dont-Touch": dont_touch
+    }
+    return loaded_layers_dict

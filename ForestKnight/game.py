@@ -6,9 +6,6 @@ from characters.player.knight import Knight
 from constants import *
 from level_loader import level_loader
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-os.chdir(BASE_DIR)
-
 
 class GameWindow(arcade.Window):
     def __init__(self):
@@ -48,31 +45,22 @@ class GameWindow(arcade.Window):
         # Setting up other sprites
         loaded_sprites = level_loader(level)
 
-        self.platforms = loaded_sprites[0]
-        self.foregrounds = loaded_sprites[1]
-        self.backgrounds = loaded_sprites[2]
-        self.ladders = loaded_sprites[3]
-        self.dont_touch = loaded_sprites[4]
+        self.platforms = loaded_sprites["Platforms"]
+        self.foregrounds = loaded_sprites["Foregrounds"]
+        self.backgrounds = loaded_sprites["Backgrounds"]
+        self.ladders = loaded_sprites["Ladders"]
+        self.dont_touch = loaded_sprites["Dont-Touch"]
 
         # Setting up the physics engine
         self.physics_engine = arcade.PhysicsEnginePlatformer(
             self.player, self.platforms, gravity_constant=GRAVITY, ladders=self.ladders)
-
-    def on_draw(self):
-        arcade.start_render()
-
-        self.platforms.draw()
-        self.backgrounds.draw()
-        self.ladders.draw()
-        self.player_list.draw()
-        self.dont_touch.draw()
-        self.foregrounds.draw()
 
     def on_key_press(self, key, modifiers):
         """ Controls player movement when a key is pressed """
         if key == arcade.key.W or key == arcade.key.UP:
             if self.physics_engine.can_jump():
                 self.player.change_y = KNIGHT_JUMP_SPEED
+                self.player.jump_sound.play()
             elif self.physics_engine.is_on_ladder():
                 self.player.change_y = KNIGHT_SPEED
         elif key == arcade.key.S or key == arcade.key.DOWN:
@@ -82,6 +70,8 @@ class GameWindow(arcade.Window):
             self.player.change_x = KNIGHT_SPEED
         elif key == arcade.key.A or key == arcade.key.LEFT:
             self.player.change_x = -KNIGHT_SPEED
+        elif key == arcade.key.SPACE:
+            self.player.is_attacking = True
 
     def on_key_release(self, key, modifiers):
         """ Stops the player's movement when a key is released """
@@ -93,10 +83,13 @@ class GameWindow(arcade.Window):
             self.player.change_x = 0
         elif key == arcade.key.A or key == arcade.key.LEFT:
             self.player.change_x = 0
+        elif key == arcade.key.SPACE:
+            self.player.is_attacking = False
 
     def on_update(self, dt):
         """ Contains all the game loop and logic code """
         self.physics_engine.update()
+        self.player.update_animation()
 
         # --- Manage Scrolling ---
 
@@ -138,3 +131,13 @@ class GameWindow(arcade.Window):
                                 SCREEN_WIDTH + self.view_left,
                                 self.view_bottom,
                                 SCREEN_HEIGHT + self.view_bottom)
+
+    def on_draw(self):
+        arcade.start_render()
+
+        self.platforms.draw()
+        self.backgrounds.draw()
+        self.ladders.draw()
+        self.player_list.draw()
+        self.dont_touch.draw()
+        self.foregrounds.draw()

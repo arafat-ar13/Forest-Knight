@@ -1,5 +1,10 @@
 import arcade
 
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+os.chdir(BASE_DIR)
+
 from game import GameWindow
 
 def main():
