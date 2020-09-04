@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="6" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="1">
  <tileset firstgid="1" name="platforms" tilewidth="562" tileheight="508" tilecount="111" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -353,7 +353,7 @@
  </tileset>
  <layer id="1" name="Platforms" width="50" height="20">
   <data encoding="base64" compression="zlib">
-   eJztkcEKgzAMhjs9baAexnRDt7HDBvONfP8XMR7En9BDl9YURj74wJaY/KHOGYZhGEYcV/IM3pTmvpXmpOJOPsgJXM7PnKF+ZITvI4hUZA02OtGC+SrOWd2jd87/OUPifin5eO5a8gJ2qonCeZG923JKyfk+fIeYPRDNnXw7LB7IQiBHWsPrJFlK8iSUE1Ib0kua51+cAfvuCcc=
+   eJztkbsKgDAMRatOCuogvvCFg4L+/wcaBzEEhxJrCpIDB2yJyQ01RlEURVHe0YAFshWauwjNccUAjuTuPE8esnDZ0XeMxKRghsxlolmzCc65/KK3z/8pveN+Llkf7iqwRNaiieyZwc7cObn4fB+6w5s9MJI7Pe1wGoAhQwq3htZxskRgwpRiU2vTi5vnLx6CFgi8
   </data>
  </layer>
  <layer id="2" name="Ladders" width="50" height="20">
@@ -373,7 +373,7 @@
  </layer>
  <layer id="5" name="Don't-Touch" width="50" height="20">
   <data encoding="base64" compression="zlib">
-   eJztz7sJACAQRMFrQbuz/0ZMjET8JJc4Ay9d2AgAAAAylKmVNnrZylandk5/bnd+0AHA7QJa
+   eJzt1bEJACAMRcGsoNu5/yK2EkRttPEOXvshVSIAgJfaEAB/KamZ0x+x27mpplZ295zu/KADOtQDZQ==
   </data>
  </layer>
 </map>

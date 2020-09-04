@@ -11,8 +11,6 @@ class GameWindow(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE)
 
-        arcade.set_background_color(arcade.csscolor.GREEN)
-
         # Player sprite
         self.player_list = None
         self.player = None
@@ -23,6 +21,12 @@ class GameWindow(arcade.Window):
         self.backgrounds = None
         self.ladders = None
         self.dont_touch = None
+
+        # Sounds
+        self.background_music = None
+
+        # Background_image
+        self.background_image = None
 
         # Used to keep track of our scrolling
         self.view_bottom = 0
@@ -50,6 +54,14 @@ class GameWindow(arcade.Window):
         self.backgrounds = loaded_sprites["Backgrounds"]
         self.ladders = loaded_sprites["Ladders"]
         self.dont_touch = loaded_sprites["Dont-Touch"]
+
+        # Loading and playing our background music
+        self.background_music = arcade.load_sound(f"{AUDIO_DIR}/backgroundMusic2.mp3")
+        self.background_music.play(volume=0.05)
+
+        # Loading and setting our background image for specified level
+        if level == 1:
+            self.background_image = arcade.load_texture(f"{IMAGES_DIR}/backgrounds/BG.png")
 
         # Setting up the physics engine
         self.physics_engine = arcade.PhysicsEnginePlatformer(
@@ -90,6 +102,10 @@ class GameWindow(arcade.Window):
         """ Contains all the game loop and logic code """
         self.physics_engine.update()
         self.player.update_animation()
+
+        # Has our background music ended? Well, play it again duh
+        if self.background_music.get_stream_position() == 0:
+            self.background_music.play()
 
         # --- Manage Scrolling ---
 
@@ -134,6 +150,10 @@ class GameWindow(arcade.Window):
 
     def on_draw(self):
         arcade.start_render()
+
+        # Drawing our loaded background images and setting it
+        arcade.draw_texture_rectangle((SCREEN_WIDTH // 2) + self.view_left, (SCREEN_HEIGHT // 2) + self.view_bottom,
+                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background_image)
 
         self.platforms.draw()
         self.backgrounds.draw()
