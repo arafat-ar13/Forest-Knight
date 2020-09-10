@@ -11,7 +11,7 @@
 ### Knight
 
 - [ ] Animations
-  - [ ] Movment
+  - [ ] Movement
     - [x] Walking
     - [ ] Running
   - [x] Jumping
@@ -21,15 +21,17 @@
 - [ ] Stats management: Health, score, attack points
 
 ### Enemies
+
 - [ ] Code out the first enemy: Zombie Male
 - [ ] Code out the second enemy: Zombie Female
 - [ ] Code out the third enemy: Ninja
 - [ ] Implement enemy stats like their attack points and health and basic fixed movement
 
 ## Miscellaneous Stuff
-- [ ] Add background image for each level
-- [ ] Add background music to the game
-- [ ] Reduce Knight health if fallen into water or lava or the spikes
 
+- [ ] Add background image for each level
+- [x] Add background music to the game
+- [x] Reduce Knight health if fallen into water or lava or the spikes
+- [ ] Implement a game saving utility so that save/load the game
 
 This file will be updated constantly as I progress on the game and also add new stuff to this file as they show up.
