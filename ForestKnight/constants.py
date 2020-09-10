@@ -16,7 +16,7 @@ ZOMBIE_MALE_IMAGES_DIR = "assets/images/zombie_male"
 
 # Scaling
 TILE_SCALE = 0.5
-CHARACTER_SCALE = 0.15
+CHARACTER_SCALE = 0.16
 
 # Player scrolling
 # How many pixels to keep as a minimum margin between the character
@@ -30,7 +30,7 @@ TOP_VIEWPORT_MARGIN = 100
 GRAVITY = 1
 
 # Knight moving velocity and other constants
-KNIGHT_SPEED = 8
+KNIGHT_SPEED = 9
 KNIGHT_JUMP_SPEED = 19
 KNIGHT_FACE_RIGHT = 0
 KNIGHT_FACE_LEFT = 1

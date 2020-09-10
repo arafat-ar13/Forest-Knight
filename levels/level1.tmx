@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="7" nextobjectid="1">
- <tileset firstgid="1" name="platforms" tilewidth="562" tileheight="508" tilecount="111" columns="0">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="20" tilewidth="128" tileheight="128" infinite="0" nextlayerid="8" nextobjectid="1">
+ <tileset firstgid="1" name="platforms" tilewidth="562" tileheight="508" tilecount="132" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
    <image width="128" height="128" source="../assets/images/tilesets/1.png"/>
@@ -350,6 +350,69 @@
   <tile id="110">
    <image width="202" height="462" source="../assets/images/objects/treeSnow.png"/>
   </tile>
+  <tile id="111">
+   <image width="128" height="128" source="../assets/images/items/coinBronze.png"/>
+  </tile>
+  <tile id="112">
+   <image width="128" height="128" source="../assets/images/items/coinGold.png"/>
+  </tile>
+  <tile id="113">
+   <image width="128" height="128" source="../assets/images/items/coinSilver.png"/>
+  </tile>
+  <tile id="114">
+   <image width="128" height="128" source="../assets/images/items/flagGreen_down.png"/>
+  </tile>
+  <tile id="115">
+   <image width="128" height="128" source="../assets/images/items/flagGreen1.png"/>
+  </tile>
+  <tile id="116">
+   <image width="128" height="128" source="../assets/images/items/flagGreen2.png"/>
+  </tile>
+  <tile id="117">
+   <image width="128" height="128" source="../assets/images/items/flagRed_down.png"/>
+  </tile>
+  <tile id="118">
+   <image width="128" height="128" source="../assets/images/items/flagRed1.png"/>
+  </tile>
+  <tile id="119">
+   <image width="128" height="128" source="../assets/images/items/flagRed2.png"/>
+  </tile>
+  <tile id="120">
+   <image width="128" height="128" source="../assets/images/items/flagYellow_down.png"/>
+  </tile>
+  <tile id="121">
+   <image width="128" height="128" source="../assets/images/items/flagYellow1.png"/>
+  </tile>
+  <tile id="122">
+   <image width="128" height="128" source="../assets/images/items/flagYellow2.png"/>
+  </tile>
+  <tile id="123">
+   <image width="128" height="128" source="../assets/images/items/gemBlue.png"/>
+  </tile>
+  <tile id="124">
+   <image width="128" height="128" source="../assets/images/items/gemGreen.png"/>
+  </tile>
+  <tile id="125">
+   <image width="128" height="128" source="../assets/images/items/gemRed.png"/>
+  </tile>
+  <tile id="126">
+   <image width="128" height="128" source="../assets/images/items/gemYellow.png"/>
+  </tile>
+  <tile id="127">
+   <image width="128" height="128" source="../assets/images/items/keyBlue.png"/>
+  </tile>
+  <tile id="128">
+   <image width="128" height="128" source="../assets/images/items/keyGreen.png"/>
+  </tile>
+  <tile id="129">
+   <image width="128" height="128" source="../assets/images/items/keyRed.png"/>
+  </tile>
+  <tile id="130">
+   <image width="128" height="128" source="../assets/images/items/keyYellow.png"/>
+  </tile>
+  <tile id="131">
+   <image width="128" height="128" source="../assets/images/items/star.png"/>
+  </tile>
  </tileset>
  <layer id="1" name="Platforms" width="50" height="20">
   <data encoding="base64" compression="zlib">
@@ -374,6 +437,11 @@
  <layer id="5" name="Don't-Touch" width="50" height="20">
   <data encoding="base64" compression="zlib">
    eJzt1bEJACAMRcGsoNu5/yK2EkRttPEOXvshVSIAgJfaEAB/KamZ0x+x27mpplZ295zu/KADOtQDZQ==
+  </data>
+ </layer>
+ <layer id="7" name="Collectibles" width="50" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzt1bEKACAIBNA+uRqj+vYWJ6FCQhO5B7dFIkqlBAAAv3SDGtmgBtwNwdlK0fCyc5IevIrQg5WmeHf0OUyKR4WyY/Ev7UjfvVMfnNd5AHALDi8Idg==
   </data>
  </layer>
 </map>

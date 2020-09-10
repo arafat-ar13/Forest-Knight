@@ -7,7 +7,7 @@ from constants import *
 from level_loader import level_loader
 
 
-class GameWindow(arcade.Window):
+class ForestKnight(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE)
 
@@ -21,9 +21,12 @@ class GameWindow(arcade.Window):
         self.backgrounds = None
         self.ladders = None
         self.dont_touch = None
+        self.collectibles = None
 
         # Sounds
         self.background_music = None
+        self.collectible_sound = None
+        self.gameover_sound = None
 
         # Background_image
         self.background_image = None
@@ -31,6 +34,9 @@ class GameWindow(arcade.Window):
         # Used to keep track of our scrolling
         self.view_bottom = 0
         self.view_left = 0
+
+        # Variable used to slow down the playing of continuous sounds in the main game loop
+        self.sound_frame_counter = None
 
         # Our simple Physics Engine
         self.physics_engine = None
@@ -45,6 +51,7 @@ class GameWindow(arcade.Window):
         self.player_list = arcade.SpriteList()
         self.player = Knight()
         self.player_list.append(self.player)
+        self.player_list.preload_textures(self.player.all_textures)
 
         # Setting up other sprites
         loaded_sprites = level_loader(level)
@@ -54,14 +61,23 @@ class GameWindow(arcade.Window):
         self.backgrounds = loaded_sprites["Backgrounds"]
         self.ladders = loaded_sprites["Ladders"]
         self.dont_touch = loaded_sprites["Dont-Touch"]
+        self.collectibles = loaded_sprites["Collectibles"]
 
         # Loading and playing our background music
-        self.background_music = arcade.load_sound(f"{AUDIO_DIR}/backgroundMusic2.mp3")
-        self.background_music.play(volume=0.05)
+        self.background_music = arcade.load_sound(
+            f"{AUDIO_DIR}/backgroundMusic2.mp3")
+        self.background_music.play(volume=0.2)
+        # Loading other sounds
+        self.collectible_sound = arcade.load_sound(f"{AUDIO_DIR}/coin1.wav")
+        self.gameover_sound = arcade.load_sound(f"{AUDIO_DIR}/lose1.wav")
+
+        # Variable used to slow down the playing of continuous sounds in the main game loop
+        self.sound_frame_counter = 0
 
         # Loading and setting our background image for specified level
         if level == 1:
-            self.background_image = arcade.load_texture(f"{IMAGES_DIR}/backgrounds/BG.png")
+            self.background_image = arcade.load_texture(
+                f"{IMAGES_DIR}/backgrounds/BG.png")
 
         # Setting up the physics engine
         self.physics_engine = arcade.PhysicsEnginePlatformer(
@@ -87,10 +103,10 @@ class GameWindow(arcade.Window):
 
     def on_key_release(self, key, modifiers):
         """ Stops the player's movement when a key is released """
-        if key == arcade.key.W or key == arcade.key.UP:
+
+        if key in [arcade.key.W, arcade.key.UP, arcade.key.D, arcade.key.DOWN] and self.physics_engine.is_on_ladder():
             self.player.change_y = 0
-        elif key == arcade.key.S or key == arcade.key.DOWN:
-            self.player.change_y = 0
+
         elif key == arcade.key.D or key == arcade.key.RIGHT:
             self.player.change_x = 0
         elif key == arcade.key.A or key == arcade.key.LEFT:
@@ -105,7 +121,42 @@ class GameWindow(arcade.Window):
 
         # Has our background music ended? Well, play it again duh
         if self.background_music.get_stream_position() == 0:
-            self.background_music.play()
+            self.background_music.play(volume=0.2)
+
+        # Dynamically changing the Knight's state based on what he's doing
+        if self.physics_engine.is_on_ladder():
+            self.player.is_on_ladder = True
+        else:
+            self.player.is_on_ladder = False
+
+        # Checking for collisions with collectibles and increasing Knight's score
+        collectibles_collected = arcade.check_for_collision_with_list(
+            self.player, self.collectibles)
+        for collectible in collectibles_collected:
+            # Remove the sprite and increase Knight' score
+            collectible.kill()
+            self.player.score += 1
+            # Also, play the collectible sound
+            self.collectible_sound.play(volume=0.2)
+
+        # Checking for collisions with harmfull sprites like Spikes, Lava
+        dont_touch_collided = arcade.check_for_collision_with_list(
+            self.player, self.dont_touch)
+        if len(dont_touch_collided) > 0:
+            # We'll keep decreasing the Knight's health if he wishes to stay in the harmful sprite
+            if self.player.health <= 0:
+                self.player.is_dead = True
+                if self.sound_frame_counter > 1:
+                    # Is the player dead? Also, play the gameover sound
+                    self.gameover_sound.play()
+                    self.quit()
+
+            else:
+                # Keeping it low since the update method is called 60 times per second
+                self.player.health -= 0.5
+                self.sound_frame_counter += 1
+                if self.sound_frame_counter > 45:
+                    self.player.hurt_sound.play(volume=0.2)
 
         # --- Manage Scrolling ---
 
@@ -158,6 +209,13 @@ class GameWindow(arcade.Window):
         self.platforms.draw()
         self.backgrounds.draw()
         self.ladders.draw()
+        self.collectibles.draw()
         self.player_list.draw()
         self.dont_touch.draw()
         self.foregrounds.draw()
+
+        # Drawing the Knight's stats
+        arcade.draw_text(f"Score: {self.player.score}", self.view_left +
+                         10, self.view_bottom + 10, arcade.color.WHITE_SMOKE, 15)
+
+        arcade.draw_text(f"Health: {self.player.health}", self.view_left, self.view_bottom, arcade.color.WHITE_SMOKE, 15)

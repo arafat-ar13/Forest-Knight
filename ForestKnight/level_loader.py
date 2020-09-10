@@ -8,12 +8,7 @@ from constants import TILE_SCALE
 def level_loader(level):
     """ 
     A function that will load the given level from the base levels directory.
-    It will always return a list of 5 layers:
-    Platforms
-    Foregrounds
-    Backgrounds
-    Ladders
-    Don't-Touch
+    It will return a dictionary of loaded layers of the given level
     """
     level_name = f"levels/level{level}.tmx"
 
@@ -22,6 +17,7 @@ def level_loader(level):
     background_layer_name = "Backgrounds"
     ladders_layer_name = "Ladders"
     dont_touch_layer_name = "Don't-Touch"
+    collectibles_layer_name = "Collectibles"
 
     level = arcade.tilemap.read_tmx(level_name)
 
@@ -48,17 +44,25 @@ def level_loader(level):
                                            layer_name=ladders_layer_name,
                                            scaling=TILE_SCALE,
                                            use_spatial_hash=True)
-    # Setting up Ladders layer
+    # Setting up Dont-Touch layer
     dont_touch = arcade.tilemap.process_layer(map_object=level,
                                               layer_name=dont_touch_layer_name,
                                               scaling=TILE_SCALE,
                                               use_spatial_hash=True)
+
+    # Setting up the Collectibles layer
+    collectibles = arcade.tilemap.process_layer(map_object=level, 
+                                                layer_name=collectibles_layer_name, 
+                                                scaling=TILE_SCALE, 
+                                                use_spatial_hash=True)
 
     loaded_layers_dict = {
         "Platforms": platforms,
         "Foregrounds": foregrounds,
         "Backgrounds": backgrounds,
         "Ladders": ladders,
-        "Dont-Touch": dont_touch
+        "Dont-Touch": dont_touch,
+        "Collectibles": collectibles
     }
+    
     return loaded_layers_dict

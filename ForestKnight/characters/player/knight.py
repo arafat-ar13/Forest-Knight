@@ -18,6 +18,8 @@ class Knight(arcade.Sprite):
         self.center_y = 124
         self.scale = CHARACTER_SCALE
 
+        self.all_textures = []
+
         # Loading all the different textures of the Knight
         self.idle_textures = load_textures(
             f"{KNIGHT_IMAGES_DIR}/Idle (<asset_count>).png", 10)
@@ -32,6 +34,11 @@ class Knight(arcade.Sprite):
         self.dying_textures = load_textures(
             f"{KNIGHT_IMAGES_DIR}/Dead (<asset_count>).png", 10)
 
+        # Adding all the different textures to self.textures
+        for textures in zip(self.idle_textures, self.walking_textures, self.running_textures, self.jumping_textures, self.attack_textures, self.dying_textures):
+            for texture in textures:
+                self.all_textures.extend(texture)
+
         # Variables to keep track of the direction the knight is facing
         # The default face direction would be right
         self.face_direction = KNIGHT_FACE_RIGHT
@@ -39,6 +46,8 @@ class Knight(arcade.Sprite):
         # Variables to keep track of the state of the knight
         self.is_on_ladder = False
         self.is_attacking = False
+        self.is_dead = False
+        self.is_jumping = False
 
         # Initial Idle texture
         self.texture = self.idle_textures[0][0]
@@ -49,8 +58,8 @@ class Knight(arcade.Sprite):
         self.sound_frame_counter = 0
 
         # Knight's gameplay stats
-        self.heath = None
-        self.score = None
+        self.health = 50
+        self.score = 0
         self.level = None
         self.attack_points = None
 
@@ -58,6 +67,7 @@ class Knight(arcade.Sprite):
         self.jump_sound = arcade.load_sound(f"{AUDIO_DIR}/jump1.wav")
         self.walk_sound = arcade.load_sound(f"{AUDIO_DIR}/footstep01.ogg")
         self.attack_sound = arcade.load_sound(f"{AUDIO_DIR}/knifeSlice2.ogg")
+        self.hurt_sound = arcade.load_sound(f"{AUDIO_DIR}/hurt1.wav")
 
     def update_animation(self):
         """ Method that updates the animation of the Knight using the loaded textures """
@@ -85,7 +95,7 @@ class Knight(arcade.Sprite):
             return
         
         # Jumping animation
-        if self.change_y > 0:
+        if self.change_y > 0 and not self.is_on_ladder:
             self.cur_texture += 1
             if self.cur_texture >= len(self.jumping_textures) * UPDATES_PER_FRAME:
                 self.cur_texture = 0
@@ -109,6 +119,13 @@ class Knight(arcade.Sprite):
                 self.attack_sound.play(volume=0.2)
 
             return
+
+        # Dying animation
+        if self.is_dead:
+            self.cur_texture += 1
+            if self.cur_texture >= len(self.dying_textures) * UPDATES_PER_FRAME:
+                self.cur_texture = 0
+            self.texture = self.dying_textures[self.cur_texture // UPDATES_PER_FRAME][self.face_direction]
 
         # Idle animation
         if self.change_x == 0:
