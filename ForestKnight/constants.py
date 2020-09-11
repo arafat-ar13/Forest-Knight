@@ -37,3 +37,6 @@ KNIGHT_FACE_LEFT = 1
 
 # Constant to control the speed of Knight animation. Increase the value to slow down animation speed
 UPDATES_PER_FRAME = 4
+
+# Directory of where the game data is stored
+SAVED_DATA_DIR = "saved_game_data"

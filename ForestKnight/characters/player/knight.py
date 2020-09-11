@@ -60,7 +60,6 @@ class Knight(arcade.Sprite):
         # Knight's gameplay stats
         self.health = 50
         self.score = 0
-        self.level = None
         self.attack_points = None
 
         # Loading up different sounds of the Knight

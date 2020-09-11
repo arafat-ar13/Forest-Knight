@@ -2,6 +2,7 @@ import os
 
 import arcade
 
+import gamesaver
 from characters.player.knight import Knight
 from constants import *
 from level_loader import level_loader
@@ -22,6 +23,9 @@ class ForestKnight(arcade.Window):
         self.ladders = None
         self.dont_touch = None
         self.collectibles = None
+
+        # Level
+        self.level = None
 
         # Sounds
         self.background_music = None
@@ -53,6 +57,9 @@ class ForestKnight(arcade.Window):
         self.player_list.append(self.player)
         self.player_list.preload_textures(self.player.all_textures)
 
+        # Setting up level
+        self.level = level
+
         # Setting up other sprites
         loaded_sprites = level_loader(level)
 
@@ -75,7 +82,7 @@ class ForestKnight(arcade.Window):
         self.sound_frame_counter = 0
 
         # Loading and setting our background image for specified level
-        if level == 1:
+        if self.level == 1:
             self.background_image = arcade.load_texture(
                 f"{IMAGES_DIR}/backgrounds/BG.png")
 
@@ -100,6 +107,8 @@ class ForestKnight(arcade.Window):
             self.player.change_x = -KNIGHT_SPEED
         elif key == arcade.key.SPACE:
             self.player.is_attacking = True
+        elif key == arcade.key.G:
+            self.save_game()
 
     def on_key_release(self, key, modifiers):
         """ Stops the player's movement when a key is released """
@@ -113,6 +122,54 @@ class ForestKnight(arcade.Window):
             self.player.change_x = 0
         elif key == arcade.key.SPACE:
             self.player.is_attacking = False
+
+    def save_game(self):
+        """
+        Method that generates all the values that need to be saved
+        and then calls the function from the game saving utility for the data
+        to be actually saved on the hard disk
+        """
+
+        # Generating data to be saved
+        level = self.level
+        health = self.player.health
+        score = self.player.score
+        pos = self.player.position
+        cur_texture = self.player.texture
+
+        # We cannot save native Arcade Sprites as Python Shelve objects
+        # So, we'll just save their positions
+        remaining_collectibles_pos = []
+        for collectible in self.collectibles:
+            remaining_collectibles_pos.append(collectible.position)
+
+        data_dict = {
+            "level": level,
+            "health": health,
+            "score": score,
+            "position": pos,
+            "texture": cur_texture,
+            "collectibles_pos": remaining_collectibles_pos
+        }
+
+        # Calling function from gave saving utility
+        gamesaver.save_game(data_dict)
+
+    def load_game(self, data):
+        """
+        Method that takes all the data from the loader function from the game saving utility and correctly sets up the game
+        This method will only be called if the game is NOT being run for the first time
+        """
+        self.player.health = data["health"]
+        self.player.score = data["score"]
+        self.player.position = data["position"]
+        self.player.texture = data["texture"]
+        
+        # We'll kill off any sprites that have been killed off before
+        for collectible in self.collectibles:
+            for already_killed_pos in data["collectibles_pos"]:
+                if collectible.position == already_killed_pos:
+                    collectible.kill()
 
     def on_update(self, dt):
         """ Contains all the game loop and logic code """
@@ -149,7 +206,7 @@ class ForestKnight(arcade.Window):
                 if self.sound_frame_counter > 1:
                     # Is the player dead? Also, play the gameover sound
                     self.gameover_sound.play()
-                    self.quit()
+                    exit("You died")
 
             else:
                 # Keeping it low since the update method is called 60 times per second
