@@ -1,11 +1,12 @@
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
+from arcade.sound import load_sound
 from arcade.sprite_list import SpriteList
 from arcade.window_commands import start_render
 
 from ForestKnight.characters.player.knight import Knight
-from ForestKnight.constants import (BOTTOM_VIEWPORT_MARGIN, GAME_TITLE,
-                                    GRAVITY, IMAGES_DIR, KNIGHT_SPEED,
+from ForestKnight.constants import (AUDIO_DIR, BOTTOM_VIEWPORT_MARGIN, GAME_TITLE,
+                                    GRAVITY, IMAGES_DIR, KNIGHT_JUMP_SPEED, KNIGHT_SPEED,
                                     LEFT_VIEWPORT_MARGIN,
                                     RIGHT_VIEWPORT_MARGIN, SCREEN_HEIGHT,
                                     SCREEN_WIDTH, TOP_VIEWPORT_MARGIN)
@@ -52,7 +53,10 @@ class ForestKnight(arcade.Window):
         )
 
     def setup_sounds(self):
-        pass
+        self.collectible_sound = load_sound(f"{AUDIO_DIR}/coin1.wav")
+        self.gameover_sound = load_sound(f"{AUDIO_DIR}/lose1.wav")
+
+        self.knight.setup_sounds()
 
     def setup_images(self):
         self.background_image = arcade.load_texture(
@@ -63,18 +67,44 @@ class ForestKnight(arcade.Window):
         # Knight movement
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = KNIGHT_SPEED
+            self.knight.face_right = True
+            self.knight.face_left = False
+
         elif symbol == arcade.key.LEFT:
             self.knight.change_x = -KNIGHT_SPEED
+            self.knight.face_left = True
+            self.knight.face_right = False
+
+        elif symbol == arcade.key.UP:
+            if self.physics_engine.can_jump() and not self.physics_engine.is_on_ladder():
+                self.knight.change_y = KNIGHT_JUMP_SPEED
+                self.knight.jump_sound.play()
+            elif self.physics_engine.is_on_ladder():
+                self.knight.change_y = KNIGHT_SPEED
+
+        elif symbol == arcade.key.DOWN:
+            if self.physics_engine.is_on_ladder():
+                self.knight.change_y = -KNIGHT_SPEED
 
         # Other key-based actions
         if symbol == arcade.key.Q:
+            self.gameover_sound.play()
             arcade.close_window()
+        
+        return super().on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = 0
+
         elif symbol == arcade.key.LEFT:
             self.knight.change_x = 0
+
+        elif symbol in [arcade.key.UP, arcade.key.DOWN] and self.physics_engine.is_on_ladder():
+            self.knight.change_y = 0
+
+        return super().on_key_release(symbol, modifiers)
+        
 
     def on_update(self, delta_time):
         self.character_sprites.update()
@@ -124,6 +154,9 @@ class ForestKnight(arcade.Window):
                 SCREEN_HEIGHT + self.view_bottom,
             )
 
+
+        return super().on_update(delta_time)
+
     def on_draw(self):
         start_render()
 
@@ -143,3 +176,6 @@ class ForestKnight(arcade.Window):
         self.character_sprites.draw()
         self.dont_touch.draw()
         self.foregrounds.draw()
+
+        return super().on_draw()
+        

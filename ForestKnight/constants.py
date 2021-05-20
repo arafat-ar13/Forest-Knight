@@ -30,7 +30,7 @@ GRAVITY = 1
 
 # Knight moving velocity and other constants
 KNIGHT_SPEED = 4
-KNIGHT_JUMP_SPEED = 19
+KNIGHT_JUMP_SPEED = 12.5
 
 # Facing directions
 FACE_RIGHT = 0
