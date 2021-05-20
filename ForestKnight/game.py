@@ -127,6 +127,15 @@ class ForestKnight(arcade.Window):
     def on_draw(self):
         start_render()
 
+        # Drawing our loaded background images and setting it
+        arcade.draw_texture_rectangle(
+            (SCREEN_WIDTH // 2) + self.view_left,
+            (SCREEN_HEIGHT // 2) + self.view_bottom,
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            self.background_image,
+        )
+
         self.platforms.draw()
         self.backgrounds.draw()
         self.ladders.draw()
