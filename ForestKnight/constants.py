@@ -29,7 +29,7 @@ TOP_VIEWPORT_MARGIN = 100
 GRAVITY = 1
 
 # Knight moving velocity and other constants
-KNIGHT_SPEED = 9
+KNIGHT_SPEED = 4
 KNIGHT_JUMP_SPEED = 19
 
 # Facing directions
