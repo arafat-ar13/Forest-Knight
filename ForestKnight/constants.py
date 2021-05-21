@@ -28,13 +28,13 @@ TOP_VIEWPORT_MARGIN = 100
 # Gravity
 GRAVITY = 1
 
-# Knight moving velocity and other constants
+# Knight constants
 KNIGHT_SPEED = 4
 KNIGHT_JUMP_SPEED = 12.5
-
-# Facing directions
-FACE_RIGHT = 0
-FACE_LEFT = 1
+KNIGHT_FACE_RIGHT = 1
+KNIGHT_FACE_LEFT = 2
+KNIGHT_X = 124
+KNIGHT_Y = 124
 
 # Control the speed of Knight animation. Increase value to slow down animation
 UPDATES_PER_FRAME = 4
