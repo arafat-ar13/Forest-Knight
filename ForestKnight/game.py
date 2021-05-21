@@ -1,12 +1,13 @@
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
 from arcade.sound import load_sound
-from arcade.sprite_list import SpriteList
+from arcade.sprite_list import SpriteList, check_for_collision_with_list
 from arcade.window_commands import start_render
 
 from ForestKnight.characters.player.knight import Knight
-from ForestKnight.constants import (AUDIO_DIR, BOTTOM_VIEWPORT_MARGIN, GAME_TITLE,
-                                    GRAVITY, IMAGES_DIR, KNIGHT_JUMP_SPEED, KNIGHT_SPEED,
+from ForestKnight.constants import (AUDIO_DIR, BOTTOM_VIEWPORT_MARGIN,
+                                    GAME_TITLE, GRAVITY, IMAGES_DIR,
+                                    KNIGHT_JUMP_SPEED, KNIGHT_SPEED,
                                     LEFT_VIEWPORT_MARGIN,
                                     RIGHT_VIEWPORT_MARGIN, SCREEN_HEIGHT,
                                     SCREEN_WIDTH, TOP_VIEWPORT_MARGIN)
@@ -45,7 +46,7 @@ class ForestKnight(arcade.Window):
         """ Method to set up the Knight and other Enemies """
         self.knight = Knight()
         self.character_sprites.append(self.knight)
-        self.character_sprites.preload_textures(self.knight.all_textures)
+        self.character_sprites.preload_textures(self.knight.textures)
 
     def setup_physics_engine(self):
         self.physics_engine = PhysicsEnginePlatformer(
@@ -64,16 +65,12 @@ class ForestKnight(arcade.Window):
         )
 
     def on_key_press(self, symbol, modifiers):
-        # Knight movement
+        # Knight movement and attack
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = KNIGHT_SPEED
-            self.knight.face_right = True
-            self.knight.face_left = False
 
         elif symbol == arcade.key.LEFT:
             self.knight.change_x = -KNIGHT_SPEED
-            self.knight.face_left = True
-            self.knight.face_right = False
 
         elif symbol == arcade.key.UP:
             if self.physics_engine.can_jump() and not self.physics_engine.is_on_ladder():
@@ -86,12 +83,22 @@ class ForestKnight(arcade.Window):
             if self.physics_engine.is_on_ladder():
                 self.knight.change_y = -KNIGHT_SPEED
 
+        elif symbol == arcade.key.SPACE:
+            self.knight.is_attacking = True
+
         # Other key-based actions
         if symbol == arcade.key.Q:
             self.gameover_sound.play()
             arcade.close_window()
-        
+
+        if symbol == arcade.key.P:
+            self.pause()
+
         return super().on_key_press(symbol, modifiers)
+
+    def pause(self):
+        """ Method that will bring up a screen that pauses the game """
+        pass
 
     def on_key_release(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
@@ -103,15 +110,13 @@ class ForestKnight(arcade.Window):
         elif symbol in [arcade.key.UP, arcade.key.DOWN] and self.physics_engine.is_on_ladder():
             self.knight.change_y = 0
 
+        elif symbol == arcade.key.SPACE:
+            self.knight.is_attacking = False
+
         return super().on_key_release(symbol, modifiers)
-        
 
-    def on_update(self, delta_time):
-        self.character_sprites.update()
-        self.character_sprites.update_animation()
-        self.physics_engine.update()
-
-        # --- Manage Scrolling ---
+    def update_viewport(self):
+        """ --- Manage Scrolling --- """
 
         # Track if we need to change the viewport
         changed = False
@@ -154,6 +159,25 @@ class ForestKnight(arcade.Window):
                 SCREEN_HEIGHT + self.view_bottom,
             )
 
+    def on_update(self, delta_time):
+        self.character_sprites.update()
+        self.character_sprites.update_animation()
+        self.physics_engine.update()
+
+        # Restrict Knight from falling off the left edge
+        if self.knight.left < 0:
+            self.knight.left = 0
+
+        # Managing viewport
+        self.update_viewport()
+
+        # Collecting coins logic
+        coins_collected = check_for_collision_with_list(
+            self.knight, self.collectibles)
+        for coin in coins_collected:
+            coin.kill()
+            self.knight.score += 1
+            self.collectible_sound.play()
 
         return super().on_update(delta_time)
 
@@ -178,4 +202,3 @@ class ForestKnight(arcade.Window):
         self.foregrounds.draw()
 
         return super().on_draw()
-        
