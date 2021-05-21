@@ -5,12 +5,20 @@ from arcade.sprite_list import SpriteList, check_for_collision_with_list
 from arcade.window_commands import start_render
 
 from ForestKnight.characters.player.knight import Knight
-from ForestKnight.constants import (AUDIO_DIR, BOTTOM_VIEWPORT_MARGIN,
-                                    GAME_TITLE, GRAVITY, IMAGES_DIR,
-                                    KNIGHT_JUMP_SPEED, KNIGHT_SPEED,
-                                    LEFT_VIEWPORT_MARGIN,
-                                    RIGHT_VIEWPORT_MARGIN, SCREEN_HEIGHT,
-                                    SCREEN_WIDTH, TOP_VIEWPORT_MARGIN)
+from ForestKnight.constants import (
+    AUDIO_DIR,
+    BOTTOM_VIEWPORT_MARGIN,
+    GAME_TITLE,
+    GRAVITY,
+    IMAGES_DIR,
+    KNIGHT_JUMP_SPEED,
+    KNIGHT_SPEED,
+    LEFT_VIEWPORT_MARGIN,
+    RIGHT_VIEWPORT_MARGIN,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    TOP_VIEWPORT_MARGIN,
+)
 from ForestKnight.helper_functions import level_loader
 
 
@@ -32,7 +40,7 @@ class ForestKnight(arcade.Window):
         self.setup_images()
 
     def setup_sprites(self):
-        """ Method that sets up all the Sprites (except for Player and Enemies) """
+        """Method that sets up all the Sprites (except for Player and Enemies)"""
         loaded_sprites = level_loader(1)
 
         self.platforms = loaded_sprites["Platforms"]
@@ -43,7 +51,7 @@ class ForestKnight(arcade.Window):
         self.collectibles = loaded_sprites["Collectibles"]
 
     def setup_characters(self):
-        """ Method to set up the Knight and other Enemies """
+        """Method to set up the Knight and other Enemies"""
         self.knight = Knight()
         self.character_sprites.append(self.knight)
         self.character_sprites.preload_textures(self.knight.textures)
@@ -60,9 +68,7 @@ class ForestKnight(arcade.Window):
         self.knight.setup_sounds()
 
     def setup_images(self):
-        self.background_image = arcade.load_texture(
-            f"{IMAGES_DIR}/backgrounds/BG.png"
-        )
+        self.background_image = arcade.load_texture(f"{IMAGES_DIR}/backgrounds/BG.png")
 
     def on_key_press(self, symbol, modifiers):
         # Knight movement and attack
@@ -73,7 +79,10 @@ class ForestKnight(arcade.Window):
             self.knight.change_x = -KNIGHT_SPEED
 
         elif symbol == arcade.key.UP:
-            if self.physics_engine.can_jump() and not self.physics_engine.is_on_ladder():
+            if (
+                self.physics_engine.can_jump()
+                and not self.physics_engine.is_on_ladder()
+            ):
                 self.knight.change_y = KNIGHT_JUMP_SPEED
                 self.knight.jump_sound.play()
             elif self.physics_engine.is_on_ladder():
@@ -97,7 +106,7 @@ class ForestKnight(arcade.Window):
         return super().on_key_press(symbol, modifiers)
 
     def pause(self):
-        """ Method that will bring up a screen that pauses the game """
+        """Method that will bring up a screen that pauses the game"""
         pass
 
     def on_key_release(self, symbol, modifiers):
@@ -107,7 +116,10 @@ class ForestKnight(arcade.Window):
         elif symbol == arcade.key.LEFT:
             self.knight.change_x = 0
 
-        elif symbol in [arcade.key.UP, arcade.key.DOWN] and self.physics_engine.is_on_ladder():
+        elif (
+            symbol in [arcade.key.UP, arcade.key.DOWN]
+            and self.physics_engine.is_on_ladder()
+        ):
             self.knight.change_y = 0
 
         elif symbol == arcade.key.SPACE:
@@ -116,7 +128,7 @@ class ForestKnight(arcade.Window):
         return super().on_key_release(symbol, modifiers)
 
     def update_viewport(self):
-        """ --- Manage Scrolling --- """
+        """--- Manage Scrolling ---"""
 
         # Track if we need to change the viewport
         changed = False
@@ -172,8 +184,7 @@ class ForestKnight(arcade.Window):
         self.update_viewport()
 
         # Collecting coins logic
-        coins_collected = check_for_collision_with_list(
-            self.knight, self.collectibles)
+        coins_collected = check_for_collision_with_list(self.knight, self.collectibles)
         for coin in coins_collected:
             coin.kill()
             self.knight.score += 1

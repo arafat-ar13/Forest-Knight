@@ -1,9 +1,15 @@
 import arcade
 from arcade.sound import load_sound
-from ForestKnight.constants import (AUDIO_DIR, CHARACTER_SCALE,
-                                    KNIGHT_FACE_LEFT, KNIGHT_FACE_RIGHT,
-                                    KNIGHT_IMAGES_DIR, KNIGHT_X, KNIGHT_Y,
-                                    UPDATES_PER_FRAME)
+from ForestKnight.constants import (
+    AUDIO_DIR,
+    CHARACTER_SCALE,
+    KNIGHT_FACE_LEFT,
+    KNIGHT_FACE_RIGHT,
+    KNIGHT_IMAGES_DIR,
+    KNIGHT_X,
+    KNIGHT_Y,
+    UPDATES_PER_FRAME,
+)
 from ForestKnight.helper_functions import load_texture_pair, load_textures
 
 
@@ -32,15 +38,24 @@ class Knight(arcade.AnimatedWalkingSprite):
         self.textures.extend(self.stand_right_textures)
         self.textures.extend(self.stand_left_textures)
 
-        for texture_right, texture_left in load_textures(f"{KNIGHT_IMAGES_DIR}/Run (<asset_count>).png", 10):
+        for texture_right, texture_left in load_textures(
+            f"{KNIGHT_IMAGES_DIR}/Run (<asset_count>).png", 10
+        ):
             self.walk_right_textures.append(texture_right)
             self.walk_left_textures.append(texture_left)
 
-        for attack_right, attack_left in load_textures(f"{KNIGHT_IMAGES_DIR}/Attack (<asset_count>).png", 10):
+        for attack_right, attack_left in load_textures(
+            f"{KNIGHT_IMAGES_DIR}/Attack (<asset_count>).png", 10
+        ):
             self.attack_right_textures.append(attack_right)
             self.attack_left_textures.append(attack_left)
 
-        for texture1, texture2, texture3, texture4 in zip(self.walk_right_textures, self.walk_left_textures, self.attack_right_textures, self.attack_left_textures):
+        for texture1, texture2, texture3, texture4 in zip(
+            self.walk_right_textures,
+            self.walk_left_textures,
+            self.attack_right_textures,
+            self.attack_left_textures,
+        ):
             self.textures.append(texture1)
             self.textures.append(texture2)
             self.textures.append(texture3)
