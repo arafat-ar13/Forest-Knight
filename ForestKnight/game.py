@@ -172,13 +172,12 @@ class ForestKnight(arcade.Window):
             )
 
     def on_update(self, delta_time):
+        self.physics_engine.update()
         self.character_sprites.update()
         self.character_sprites.update_animation()
-        self.physics_engine.update()
 
-        # Restrict Knight from falling off the left edge
-        if self.knight.left < 0:
-            self.knight.left = 0
+        if self.knight.is_attacking:
+            self.knight.attack()
 
         # Managing viewport
         self.update_viewport()

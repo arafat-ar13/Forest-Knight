@@ -61,6 +61,13 @@ class Knight(arcade.AnimatedWalkingSprite):
             self.textures.append(texture3)
             self.textures.append(texture4)
 
+        self.texture = self.stand_right_textures[0]
+
+        # Sounds related to the Knight
+        self.jump_sound = None
+        self.run_sound = None
+        self.attack_sound = None
+
         # Variables to control animation and sound speeds
         self.sound_frame_counter = 0
         self.texture_frame_counter = 0
@@ -77,6 +84,31 @@ class Knight(arcade.AnimatedWalkingSprite):
         self.run_sound = load_sound(f"{AUDIO_DIR}/footstep01.ogg")
         self.attack_sound = load_sound(f"{AUDIO_DIR}/knifeSlice2.ogg")
 
+    def attack(self):
+        """Method containing the animation and texture logic to make the Knight do an attack animation"""
+        self.texture_frame_counter += 1
+        # Attack right and left textures are of equal length so it doesn't matter whose len we use
+        if (
+            self.texture_frame_counter
+            >= len(self.attack_right_textures) * UPDATES_PER_FRAME
+        ):
+            self.texture_frame_counter = 0
+
+        if self.state == KNIGHT_FACE_RIGHT:
+            self.texture = self.attack_right_textures[
+                self.texture_frame_counter // UPDATES_PER_FRAME
+            ]
+        elif self.state == KNIGHT_FACE_LEFT:
+            self.texture = self.attack_left_textures[
+                self.texture_frame_counter // UPDATES_PER_FRAME
+            ]
+
+        # Playing attacking sound
+        self.sound_frame_counter += 1
+        if self.sound_frame_counter > 30:
+            self.sound_frame_counter = 0
+            self.attack_sound.play(volume=0.2)
+
     def update_animation(self, delta_time: float):
         # Playing Knight walking sound
         if self.change_x > 0 or self.change_x < 0:
@@ -85,17 +117,8 @@ class Knight(arcade.AnimatedWalkingSprite):
                 self.sound_frame_counter = 0
                 self.run_sound.play(volume=0.2)
 
-        # Handling Knight's attack animations
-        # if self.is_attacking:
-        #     self.texture_frame_counter += 1
-        #     # Attack right and left textures are of equal length so it doesn't matter whose len we use
-        #     if self.texture_frame_counter >= len(self.attack_right_textures) * UPDATES_PER_FRAME:
-        #         self.texture_frame_counter = 0
-        #     if self.state == KNIGHT_FACE_RIGHT:
-        #         self.texture = self.attack_right_textures[self.texture_frame_counter //
-        #                                                   UPDATES_PER_FRAME]
-        #     elif self.state == KNIGHT_FACE_LEFT:
-        #         self.texture = self.attack_left_textures[self.texture_frame_counter //
-        #                                                  UPDATES_PER_FRAME]
+        # Restrict Knight from falling off the left edge
+        if self.left < 0:
+            self.left = 0
 
         return super().update_animation(delta_time=delta_time)
