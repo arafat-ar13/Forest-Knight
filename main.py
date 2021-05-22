@@ -27,7 +27,7 @@ def print_game_info():
 
 def main():
     game = ForestKnight()
-    game.setup()
+    game.setup(level=1)
     run()
 
 

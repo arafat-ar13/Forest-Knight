@@ -30,18 +30,42 @@ class ForestKnight(arcade.Window):
         self.view_bottom = 0
         self.view_left = 0
 
-    def setup(self):
+        # Sprites
+        self.knight = None
+        self.character_sprites = None
+        self.platforms = None
+        self.foregrounds = None
+        self.backgrounds = None
+        self.ladders = None
+        self.dont_touch = None
+        self.collectibles = None
+
+        # Sounds
+        self.collectible_sound = None
+        self.gameover_sound = None
+
+        # Images
+        self.background_image = None
+
+        # Physics Engine
+        self.physics_engine = None
+
+    def setup(self, level):
+        """
+        Method that sets up the given level of the game.
+        It also calls other setup methods used in the game.
+        """
         self.character_sprites = SpriteList()
 
-        self.setup_sprites()
+        self.setup_sprites(level)
         self.setup_characters()
         self.setup_physics_engine()
         self.setup_sounds()
         self.setup_images()
 
-    def setup_sprites(self):
-        """Method that sets up all the Sprites (except for Player and Enemies)"""
-        loaded_sprites = level_loader(1)
+    def setup_sprites(self, level):
+        """Method that sets up all the Sprites (except for Knight and other Enemies)"""
+        loaded_sprites = level_loader(level)
 
         self.platforms = loaded_sprites["Platforms"]
         self.foregrounds = loaded_sprites["Foregrounds"]
@@ -57,18 +81,24 @@ class ForestKnight(arcade.Window):
         self.character_sprites.preload_textures(self.knight.textures)
 
     def setup_physics_engine(self):
+        """Method to set up arcade.PhysicsEnginePlatformer"""
         self.physics_engine = PhysicsEnginePlatformer(
             self.knight, self.platforms, gravity_constant=GRAVITY, ladders=self.ladders
         )
 
     def setup_sounds(self):
+        """Method that loads all the sounds required in the game"""
         self.collectible_sound = load_sound(f"{AUDIO_DIR}/coin1.wav")
         self.gameover_sound = load_sound(f"{AUDIO_DIR}/lose1.wav")
 
         self.knight.setup_sounds()
 
-    def setup_images(self):
-        self.background_image = arcade.load_texture(f"{IMAGES_DIR}/backgrounds/BG.png")
+    def setup_images(self, level=1):
+        """Method to set up background image of the current level"""
+        if level == 1:
+            self.background_image = arcade.load_texture(
+                f"{IMAGES_DIR}/backgrounds/BG.png"
+            )
 
     def on_key_press(self, symbol, modifiers):
         # Knight movement and attack
@@ -105,10 +135,6 @@ class ForestKnight(arcade.Window):
 
         return super().on_key_press(symbol, modifiers)
 
-    def pause(self):
-        """Method that will bring up a screen that pauses the game"""
-        pass
-
     def on_key_release(self, symbol, modifiers):
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = 0
@@ -126,6 +152,10 @@ class ForestKnight(arcade.Window):
             self.knight.is_attacking = False
 
         return super().on_key_release(symbol, modifiers)
+
+    def pause(self):
+        """Method that will bring up a screen that pauses the game"""
+        pass
 
     def update_viewport(self):
         """--- Manage Scrolling ---"""
