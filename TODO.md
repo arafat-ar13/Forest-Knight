@@ -28,7 +28,7 @@
 ## Miscellaneous Stuff
 
 - [x] Add background image for Level 1
-- [ ] Implement a game saving utility so that save/load the game
+- [x] Implement a game saving utility so that save/load the game
 - [ ] Add background music to the game
 - [ ] Reduce Knight health if fallen into water or lava or the spikes
 - [ ] Different Game Screens like Home Page, Pause, Instructions Screen

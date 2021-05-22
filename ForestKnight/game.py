@@ -19,6 +19,7 @@ from ForestKnight.constants import (
     SCREEN_WIDTH,
     TOP_VIEWPORT_MARGIN,
 )
+from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
 
 
@@ -39,6 +40,7 @@ class ForestKnight(arcade.Window):
         self.ladders = None
         self.dont_touch = None
         self.collectibles = None
+        self.collectibles_to_omit = None
 
         # Sounds
         self.collectible_sound = None
@@ -50,18 +52,29 @@ class ForestKnight(arcade.Window):
         # Physics Engine
         self.physics_engine = None
 
-    def setup(self, level):
+        # Level
+        self.level = None
+
+    def setup(self, level, load_game=False, loaded_game_data=None):
         """
         Method that sets up the given level of the game.
         It also calls other setup methods used in the game.
+        Send `load_game_data` only if the game is being loaded from the hard disk
         """
         self.character_sprites = SpriteList()
 
-        self.setup_sprites(level)
+        self.collectibles_to_omit = []
+
+        self.level = level
+
+        self.setup_sprites(self.level)
         self.setup_characters()
         self.setup_physics_engine()
         self.setup_sounds()
         self.setup_images()
+
+        if load_game:
+            self.load_game_data(loaded_game_data)
 
     def setup_sprites(self, level):
         """Method that sets up all the Sprites (except for Knight and other Enemies)"""
@@ -133,6 +146,9 @@ class ForestKnight(arcade.Window):
         if symbol == arcade.key.P:
             self.pause()
 
+        if symbol == arcade.key.G:
+            self.gen_game_data()
+
         return super().on_key_press(symbol, modifiers)
 
     def on_key_release(self, symbol, modifiers):
@@ -156,6 +172,45 @@ class ForestKnight(arcade.Window):
     def pause(self):
         """Method that will bring up a screen that pauses the game"""
         pass
+
+    def gen_game_data(self):
+        """
+        Method that generates all the values that need to be saved
+        and then calls the function from the game saving utility for the data
+        to be actually saved on the hard disk
+        """
+        level = self.level
+        health = self.knight.health
+        score = self.knight.score
+        pos = self.knight.position
+        cur_texture = self.knight.texture
+        knight_state = self.knight.state
+        collectibles_to_omit = self.collectibles_to_omit
+
+        data_dict = {
+            "level": level,
+            "health": health,
+            "score": score,
+            "position": pos,
+            "texture": cur_texture,
+            "knight_state": knight_state,
+            "collectibles_to_omit": collectibles_to_omit,
+        }
+
+        # Calling function from gave saving utility
+        save_game(data=data_dict)
+
+    def load_game_data(self, data):
+        """
+        Method that takes all the data from the loader function from the game saving utility and correctly sets up the game.
+        This method will only be called if the game is NOT being run for the first time
+        """
+        self.knight.health = data["health"]
+        self.knight.position = data["position"]
+        self.knight.state = data["knight_state"]
+        self.knight.score = data["score"]
+        self.knight.texture = data["texture"]
+        self.collectibles_to_omit = data["collectibles_to_omit"]
 
     def update_viewport(self):
         """--- Manage Scrolling ---"""
@@ -215,6 +270,7 @@ class ForestKnight(arcade.Window):
         # Collecting coins logic
         coins_collected = check_for_collision_with_list(self.knight, self.collectibles)
         for coin in coins_collected:
+            self.collectibles_to_omit.append(coin.position)
             coin.kill()
             self.knight.score += 1
             self.collectible_sound.play()
@@ -236,7 +292,11 @@ class ForestKnight(arcade.Window):
         self.platforms.draw()
         self.backgrounds.draw()
         self.ladders.draw()
-        self.collectibles.draw()
+
+        for collectible in self.collectibles:
+            if collectible.position not in self.collectibles_to_omit:
+                collectible.draw()
+
         self.character_sprites.draw()
         self.dont_touch.draw()
         self.foregrounds.draw()
