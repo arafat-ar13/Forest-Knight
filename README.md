@@ -16,4 +16,5 @@ Check out `TODO.md`
 
 ## Latest feature implemented from `TODO.md`
 
+* Implemented a fully-working Game-Saving Utility
 * Knight attack animation when holding down the Spacebar
