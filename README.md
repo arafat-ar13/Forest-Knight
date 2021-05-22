@@ -1,13 +1,19 @@
-# Forest-Knight
+# Welcome to Forest Knight
 
-A simple adventure platformer game written in Python using the Arcade library
+A adventure Platformer game written in Python using the Arcade library
 
-This is a simple game project that is being actively developed by me. I wish to finish this by the end of this year.
-This repository too will be updated on a regular basis with new files, maps, code, assets once I get everything set up
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-For this game, I have the following plans:
+The game is still in its alpha stages and is being actively developed by me. For this game I am:
 
-* Use the [Arcade Library](https://github.com/pythonarcade/arcade) to develop this game
+* Using the [Arcade Library](https://github.com/pythonarcade/arcade) to develop this game
 * Using the [Tiled Map Editor](https://github.com/bjorn/tiled) to create all the different levels of this game
-* Use royalty-free game assets from: [Kenney NL](https://kenney.nl) and [Games Art 2d](https://www.gameart2d.com). These sites provided assets like players, enemies, platforms, GUIs, tilesets, audio etc
-* Lastly, Package the app to an executable file using the [Briefcase](https://github.com/beeware/briefcase) library from the BeeWare Project.
+* Using royalty-free game assets from: [Kenney NL](https://kenney.nl) and [Games Art 2d](https://www.gameart2d.com). These sites provided assets like players, enemies, platforms, GUIs, tilesets, audio etc.
+
+## Things left to complete
+
+Check out `TODO.md`
+
+## Latest feature implemented from `TODO.md`
+
+* Knight attack animation when holding down the Spacebar

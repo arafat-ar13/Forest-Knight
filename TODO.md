@@ -1,6 +1,6 @@
 # Tasks that are yet to accomplish for the completion of this game
 
-## Levels created using the Tiled Map Editor
+## Levels to create using the Tiled Map Editor
 
 - [x] Level 1
 - [ ] Level 2
@@ -10,28 +10,27 @@
 
 ### Knight
 
-- [ ] Animations
-  - [ ] Movement
-    - [x] Walking
-    - [ ] Running
+- [x] Animations
+  - [x] Movement
+    - [x] Running
   - [x] Jumping
   - [x] Attacking
-  - [ ] Dying
 - [x] Sounds: Walking, jumping and attacking
 - [ ] Stats management: Health, score, attack points
+- [ ] Attack mechanism
 
 ### Enemies
 
 - [ ] Code out the first enemy: Zombie Male
-- [ ] Code out the second enemy: Zombie Female
-- [ ] Code out the third enemy: Ninja
 - [ ] Implement enemy stats like their attack points and health and basic fixed movement
+- [ ] Enemy attack mechanism
 
 ## Miscellaneous Stuff
 
-- [ ] Add background image for each level
-- [x] Add background music to the game
-- [x] Reduce Knight health if fallen into water or lava or the spikes
+- [x] Add background image for Level 1
 - [ ] Implement a game saving utility so that save/load the game
+- [ ] Add background music to the game
+- [ ] Reduce Knight health if fallen into water or lava or the spikes
+- [ ] Different Game Screens like Home Page, Pause, Instructions Screen
 
-This file will be updated constantly as I progress on the game and also add new stuff to this file as they show up.
+This file will be updated constantly as I progress on the game and also add new stuff to this file as they show up. Also, please note that any task in this file may or may not be completed depending on my personal resources and time.
