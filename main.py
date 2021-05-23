@@ -8,12 +8,12 @@ from ForestKnight.game_saving_utility import create_data_dir, load_game
 
 
 def print_game_info():
-    game_version = "0.5"
+    game_version = "0.5.3"
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 22nd, 2021"
+    last_commit = "May 23rd, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")
