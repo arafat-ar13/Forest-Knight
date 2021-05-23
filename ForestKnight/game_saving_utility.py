@@ -3,6 +3,8 @@
 import os
 import shelve
 
+from arcade.sprite_list import SpriteList
+
 from ForestKnight.constants import SAVED_DATA_DIR
 
 
@@ -45,3 +47,23 @@ def load_game():
     print("Game loaded successfully!")
 
     return loaded_data
+
+
+def load_collectibles(
+    collectibles: SpriteList, collectibles_to_remove_pos: list
+) -> SpriteList:
+    """
+    Function that will determine which collectibles (coins, flags, etc.) were already collected during previous gameplays.
+    After that, it will remove them from the collectibles SpriteList so that they won't be drawn anymore
+    and return a new SpriteList containing only the collectibles which are to be loaded
+    """
+    loaded_collectibles = SpriteList()
+
+    if collectibles_to_remove_pos:
+        for collectible in collectibles:
+            if collectible.position not in collectibles_to_remove_pos:
+                loaded_collectibles.append(collectible)
+    else:
+        loaded_collectibles = collectibles
+
+    return loaded_collectibles

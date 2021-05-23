@@ -67,18 +67,19 @@ class ForestKnight(arcade.Window):
 
         self.level = level
 
-        self.setup_sprites(self.level)
         self.setup_characters()
-        self.setup_physics_engine()
-        self.setup_sounds()
-        self.setup_images()
 
         if load_game:
             self.load_game_data(loaded_game_data)
 
+        self.setup_sprites(self.level)
+        self.setup_physics_engine()
+        self.setup_sounds()
+        self.setup_images()
+
     def setup_sprites(self, level):
         """Method that sets up all the Sprites (except for Knight and other Enemies)"""
-        loaded_sprites = level_loader(level)
+        loaded_sprites = level_loader(level, self.collectibles_to_omit)
 
         self.platforms = loaded_sprites["Platforms"]
         self.foregrounds = loaded_sprites["Foregrounds"]
@@ -140,7 +141,6 @@ class ForestKnight(arcade.Window):
 
         # Other key-based actions
         if symbol == arcade.key.Q:
-            self.gameover_sound.play()
             arcade.close_window()
 
         if symbol == arcade.key.P:
@@ -292,11 +292,7 @@ class ForestKnight(arcade.Window):
         self.platforms.draw()
         self.backgrounds.draw()
         self.ladders.draw()
-
-        for collectible in self.collectibles:
-            if collectible.position not in self.collectibles_to_omit:
-                collectible.draw()
-
+        self.collectibles.draw()
         self.character_sprites.draw()
         self.dont_touch.draw()
         self.foregrounds.draw()

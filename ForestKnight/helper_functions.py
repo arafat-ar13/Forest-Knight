@@ -4,6 +4,7 @@ import arcade
 from arcade.tilemap import process_layer, read_tmx
 
 from ForestKnight.constants import TILE_SCALE
+from ForestKnight.game_saving_utility import load_collectibles
 
 
 def load_texture_pair(filename):
@@ -28,10 +29,11 @@ def load_textures(filename, asset_count):
     return textures
 
 
-def level_loader(level):
+def level_loader(level, collectibles_pos):
     """
     A function that will load the given level from the base levels directory.
     It will return a dictionary of loaded layers of the given level
+    Also, the function takes a list of tuples of the positions of the collectibles that shouldn't be loaded
     """
     level_name = f"levels/level{level}.tmx"
 
@@ -90,6 +92,8 @@ def level_loader(level):
         scaling=TILE_SCALE,
         use_spatial_hash=True,
     )
+
+    collectibles = load_collectibles(collectibles, collectibles_pos)
 
     loaded_layers_dict = {
         "Platforms": platforms,
