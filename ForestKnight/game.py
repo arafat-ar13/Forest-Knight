@@ -264,6 +264,9 @@ class ForestKnight(arcade.Window):
         if self.knight.is_attacking:
             self.knight.attack()
 
+        if self.knight.is_dying:
+            self.knight.die()
+
         # Managing viewport
         self.update_viewport()
 

@@ -24,42 +24,55 @@ class Knight(arcade.AnimatedWalkingSprite):
 
         # Sprites and Animation
         self.textures = []
+
+        self.stand_textures = []
         self.stand_left_textures = []
         self.stand_right_textures = []
+
+        self.walk_textures = []
         self.walk_right_textures = []
         self.walk_left_textures = []
+
+        self.attack_textures = []
         self.attack_left_textures = []
         self.attack_right_textures = []
+
+        self.dying_textures = []
+        self.dying_right_textures = []
+        self.dying_left_textures = []
 
         idle_textures = load_texture_pair(f"{KNIGHT_IMAGES_DIR}/Idle (1).png")
         self.stand_right_textures.append(idle_textures[0])
         self.stand_left_textures.append(idle_textures[1])
-
-        self.textures.extend(self.stand_right_textures)
-        self.textures.extend(self.stand_left_textures)
+        self.stand_textures = self.stand_right_textures + self.stand_left_textures
 
         for texture_right, texture_left in load_textures(
             f"{KNIGHT_IMAGES_DIR}/Run (<asset_count>).png", 10
         ):
             self.walk_right_textures.append(texture_right)
             self.walk_left_textures.append(texture_left)
+        self.walk_textures = self.walk_right_textures + self.walk_left_textures
 
         for attack_right, attack_left in load_textures(
             f"{KNIGHT_IMAGES_DIR}/Attack (<asset_count>).png", 10
         ):
             self.attack_right_textures.append(attack_right)
             self.attack_left_textures.append(attack_left)
+        self.attack_textures = self.attack_right_textures + self.attack_left_textures
 
-        for texture1, texture2, texture3, texture4 in zip(
-            self.walk_right_textures,
-            self.walk_left_textures,
-            self.attack_right_textures,
-            self.attack_left_textures,
+        for dying_right, dying_left in load_textures(
+            f"{KNIGHT_IMAGES_DIR}/Dead (<asset_count>).png", 10
         ):
-            self.textures.append(texture1)
-            self.textures.append(texture2)
-            self.textures.append(texture3)
-            self.textures.append(texture4)
+            self.dying_right_textures.append(dying_right)
+            self.dying_left_textures.append(dying_left)
+        self.dying_textures = self.dying_right_textures + self.dying_left_textures
+
+        self.textures = (
+            self.stand_textures
+            + self.walk_textures
+            + self.attack_textures
+            + self.dying_textures
+        )
 
         self.texture = self.stand_right_textures[0]
 
@@ -74,6 +87,7 @@ class Knight(arcade.AnimatedWalkingSprite):
 
         # Variables to keep track of the Knight's states
         self.is_attacking = False
+        self.is_dying = False
 
         # Knight's stats
         self.score = 0
@@ -108,6 +122,25 @@ class Knight(arcade.AnimatedWalkingSprite):
         if self.sound_frame_counter > 30:
             self.sound_frame_counter = 0
             self.attack_sound.play(volume=0.2)
+
+    def die(self):
+        """Method that contains the animation texture for the Knight's dying"""
+        self.texture_frame_counter += 1
+        if (
+            self.texture_frame_counter
+            >= len(self.dying_right_textures) * UPDATES_PER_FRAME
+        ):
+            self.texture_frame_counter = 0
+            self.is_dying = False
+
+        if self.state == KNIGHT_FACE_RIGHT:
+            self.texture = self.dying_right_textures[
+                self.texture_frame_counter // UPDATES_PER_FRAME
+            ]
+        elif self.state == KNIGHT_FACE_LEFT:
+            self.texture = self.dying_left_textures[
+                self.texture_frame_counter // UPDATES_PER_FRAME
+            ]
 
     def update_animation(self, delta_time: float):
         # Playing Knight walking sound
