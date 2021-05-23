@@ -300,4 +300,21 @@ class ForestKnight(arcade.Window):
         self.dont_touch.draw()
         self.foregrounds.draw()
 
+        # Drawing the Knight's stats
+        arcade.draw_text(
+            f"Score: {self.knight.score}",
+            self.view_left,
+            self.view_bottom + 15,
+            arcade.color.CHROME_YELLOW,
+            15,
+        )
+
+        arcade.draw_text(
+            f"Health: {self.knight.health}",
+            self.view_left,
+            self.view_bottom,
+            arcade.color.ROSE_RED,
+            15,
+        )
+
         return super().on_draw()
