@@ -1,6 +1,6 @@
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
-from arcade.sound import load_sound
+from arcade.sound import Sound, load_sound
 from arcade.sprite_list import SpriteList, check_for_collision_with_list
 from arcade.window_commands import start_render
 
@@ -8,7 +8,6 @@ from ForestKnight.characters.player.knight import Knight
 from ForestKnight.constants import (
     AUDIO_DIR,
     BOTTOM_VIEWPORT_MARGIN,
-    GAME_TITLE,
     GRAVITY,
     IMAGES_DIR,
     KNIGHT_JUMP_SPEED,
@@ -23,9 +22,9 @@ from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
 
 
-class ForestKnight(arcade.Window):
+class ForestKnightView(arcade.View):
     def __init__(self):
-        super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE)
+        super().__init__()
 
         # Used to keep track of our scrolling
         self.view_bottom = 0
@@ -104,6 +103,10 @@ class ForestKnight(arcade.Window):
         """Method that loads all the sounds required in the game"""
         self.collectible_sound = load_sound(f"{AUDIO_DIR}/coin1.wav")
         self.gameover_sound = load_sound(f"{AUDIO_DIR}/lose1.wav")
+        self.background_music = load_sound(f"{AUDIO_DIR}/backgroundMusic2.mp3")
+
+        # We'll play the background music during initial setup
+        self.background_play = Sound.play(self.background_music, volume=0.2)
 
         self.knight.setup_sounds()
 
@@ -257,9 +260,9 @@ class ForestKnight(arcade.Window):
             )
 
     def on_update(self, delta_time):
-        self.physics_engine.update()
-        self.character_sprites.update()
         self.character_sprites.update_animation()
+        self.character_sprites.update()
+        self.physics_engine.update()
 
         if self.knight.is_attacking:
             self.knight.attack()
