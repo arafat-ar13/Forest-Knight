@@ -142,6 +142,13 @@ class ForestKnightView(arcade.View):
         elif symbol == arcade.key.SPACE:
             self.knight.is_attacking = True
 
+        if symbol in [
+            arcade.key.DOWN,
+            arcade.key.LEFT,
+            arcade.key.RIGHT,
+        ]:
+            self.knight.is_moving = True
+
         # Other key-based actions
         if symbol == arcade.key.Q:
             arcade.close_window()
@@ -169,6 +176,13 @@ class ForestKnightView(arcade.View):
 
         elif symbol == arcade.key.SPACE:
             self.knight.is_attacking = False
+
+        if symbol in [
+            arcade.key.DOWN,
+            arcade.key.LEFT,
+            arcade.key.RIGHT,
+        ]:
+            self.knight.is_moving = False
 
         return super().on_key_release(symbol, modifiers)
 
@@ -269,6 +283,13 @@ class ForestKnightView(arcade.View):
 
         if self.knight.is_dying:
             self.knight.die()
+
+        if (
+            not self.knight.is_moving
+            and not self.knight.is_attacking
+            and not self.knight.is_dying
+        ):
+            self.knight.idle_animation()
 
         # Managing viewport
         self.update_viewport()

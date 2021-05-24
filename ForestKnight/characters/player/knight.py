@@ -29,6 +29,10 @@ class Knight(arcade.AnimatedWalkingSprite):
         self.stand_left_textures = []
         self.stand_right_textures = []
 
+        self.idle_textures = []
+        self.idle_right_textures = []
+        self.idle_left_textures = []
+
         self.walk_textures = []
         self.walk_right_textures = []
         self.walk_left_textures = []
@@ -45,6 +49,13 @@ class Knight(arcade.AnimatedWalkingSprite):
         self.stand_right_textures.append(idle_textures[0])
         self.stand_left_textures.append(idle_textures[1])
         self.stand_textures = self.stand_right_textures + self.stand_left_textures
+
+        for texture_right, texture_left in load_textures(
+            f"{KNIGHT_IMAGES_DIR}/Idle (<asset_count>).png", 10
+        ):
+            self.idle_right_textures.append(texture_right)
+            self.idle_left_textures.append(texture_left)
+        self.idle_textures = self.idle_right_textures + self.idle_left_textures
 
         for texture_right, texture_left in load_textures(
             f"{KNIGHT_IMAGES_DIR}/Run (<asset_count>).png", 10
@@ -69,12 +80,13 @@ class Knight(arcade.AnimatedWalkingSprite):
 
         self.textures = (
             self.stand_textures
+            + self.idle_textures
             + self.walk_textures
             + self.attack_textures
             + self.dying_textures
         )
 
-        self.texture = self.stand_right_textures[0]
+        self.texture = self.idle_textures[0]
 
         # Sounds related to the Knight
         self.jump_sound = None
@@ -88,6 +100,7 @@ class Knight(arcade.AnimatedWalkingSprite):
         # Variables to keep track of the Knight's states
         self.is_attacking = False
         self.is_dying = False
+        self.is_moving = False
 
         # Knight's stats
         self.score = 0
@@ -140,6 +153,23 @@ class Knight(arcade.AnimatedWalkingSprite):
         elif self.state == KNIGHT_FACE_LEFT:
             self.texture = self.dying_left_textures[
                 self.texture_frame_counter // UPDATES_PER_FRAME
+            ]
+
+    def idle_animation(self):
+        """Method that contains the animation texture for when the Knight is standing idle"""
+        idle_fps = UPDATES_PER_FRAME + 1
+
+        self.texture_frame_counter += 1
+        if self.texture_frame_counter >= len(self.idle_right_textures) * idle_fps:
+            self.texture_frame_counter = 0
+
+        if self.state == KNIGHT_FACE_RIGHT:
+            self.texture = self.idle_right_textures[
+                self.texture_frame_counter // idle_fps
+            ]
+        elif self.state == KNIGHT_FACE_LEFT:
+            self.texture = self.idle_left_textures[
+                self.texture_frame_counter // idle_fps
             ]
 
     def update_animation(self, delta_time: float):
