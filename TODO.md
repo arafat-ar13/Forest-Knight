@@ -16,7 +16,7 @@
   - [x] Jumping
   - [x] Attacking
 - [x] Sounds: Walking, jumping and attacking
-- [ ] Stats management: Health, score, attack points
+- [x] Stats management: Health, score, attack points
 - [ ] Attack mechanism
 
 ### Enemies
@@ -25,12 +25,19 @@
 - [ ] Implement enemy stats like their attack points and health and basic fixed movement
 - [ ] Enemy attack mechanism
 
+### Screens
+
+- [x] Title Screen that shows up first when game is run
+- [ ] Instructions Screen
+- [ ] Pause Screen
+- [ ] Loading Screen
+- [ ] Decorate all the Screens with better fonts and GUI elements like buttons
+
 ## Miscellaneous Stuff
 
 - [x] Add background image for Level 1
 - [x] Implement a game saving utility so that save/load the game
-- [ ] Add background music to the game
+- [x] Add background music to the game
 - [ ] Reduce Knight health if fallen into water or lava or the spikes
-- [ ] Different Game Screens like Home Page, Pause, Instructions Screen
 
 This file will be updated constantly as I progress on the game and also add new stuff to this file as they show up. Also, please note that any task in this file may or may not be completed depending on my personal resources and time.
