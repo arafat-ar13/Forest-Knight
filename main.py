@@ -3,17 +3,17 @@ import sys
 import arcade
 from arcade.window_commands import run
 
-from ForestKnight.game import ForestKnight
-from ForestKnight.game_saving_utility import create_data_dir, load_game
+from ForestKnight.constants import GAME_TITLE, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.screens.title_screen import TitleView
 
 
 def print_game_info():
-    game_version = "0.6"
+    game_version = "0.6.2"
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 23rd, 2021"
+    last_commit = "May 24th, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")
@@ -27,27 +27,9 @@ def print_game_info():
 
 
 def main():
-    game = ForestKnight()
-
-    # Checking if the data directory exists or not. If not, create one
-    create_data_dir()
-
-    # Trying to load from a save file
-    loaded_data = load_game()
-    try:
-        # Since 'level' is always saved we try to retrive it first
-        level = loaded_data["level"]
-        first_time = False
-    except:
-        # If we're unable to retrieve it, it means the game is being run for the first time
-        level = 1
-        first_time = True
-
-    if first_time:
-        game.setup(level=level)
-        print("Game running for the first time")
-    else:
-        game.setup(level=level, load_game=True, loaded_game_data=loaded_data)
+    window = arcade.Window(width=SCREEN_WIDTH, height=SCREEN_HEIGHT, title=GAME_TITLE)
+    title_view = TitleView()
+    window.show_view(title_view)
 
     run()
 
