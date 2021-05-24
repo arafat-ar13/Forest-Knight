@@ -28,7 +28,7 @@
 ### Screens
 
 - [x] Title Screen that shows up first when game is run
-- [ ] Instructions Screen
+- [x] Instructions Screen
 - [ ] Pause Screen
 - [ ] Loading Screen
 - [ ] Decorate all the Screens with better fonts and GUI elements like buttons
