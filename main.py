@@ -4,7 +4,7 @@ import arcade
 from arcade.window_commands import run
 
 from ForestKnight.constants import GAME_TITLE, SCREEN_HEIGHT, SCREEN_WIDTH
-from ForestKnight.screens.title_screen import TitleView
+from ForestKnight.screens import TitleView
 
 
 def print_game_info():
