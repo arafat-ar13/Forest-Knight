@@ -9,12 +9,12 @@ from ForestKnight.screens import TitleView
 
 
 def print_game_info():
-    game_version = "0.6.3"
+    game_version = "0.7"
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 26th, 2021"
+    last_commit = "May 27th, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")
@@ -29,7 +29,7 @@ def print_game_info():
 
 def main():
     window = arcade.Window(width=SCREEN_WIDTH, height=SCREEN_HEIGHT, title=GAME_TITLE)
-    game = ForestKnightView
+    game = ForestKnightView()
     title_view = TitleView(game)
     window.show_view(title_view)
 
