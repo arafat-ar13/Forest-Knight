@@ -1,3 +1,7 @@
+"""
+Source code that handles everything about the main player of the game - The Knight
+"""
+
 import arcade
 from arcade.sound import load_sound
 from ForestKnight.constants import (
@@ -14,6 +18,10 @@ from ForestKnight.helper_functions import load_texture_pair, load_textures
 
 
 class Knight(arcade.AnimatedWalkingSprite):
+    """
+    The class that defines the characteristics of The Knight and contains all the logic
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -107,6 +115,7 @@ class Knight(arcade.AnimatedWalkingSprite):
         self.health = 50
 
     def setup_sounds(self):
+        """Method to setup all the Knight-related sounds"""
         self.jump_sound = load_sound(f"{AUDIO_DIR}/jump3.wav")
         self.run_sound = load_sound(f"{AUDIO_DIR}/footstep01.ogg")
         self.attack_sound = load_sound(f"{AUDIO_DIR}/knifeSlice2.ogg")
@@ -173,6 +182,7 @@ class Knight(arcade.AnimatedWalkingSprite):
             ]
 
     def update_animation(self, delta_time: float):
+        """Method that is called about 60 times every second to update the animation of the Knight"""
         # Playing Knight walking sound
         if self.change_x > 0 or self.change_x < 0:
             self.sound_frame_counter += 1

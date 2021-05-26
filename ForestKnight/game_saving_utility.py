@@ -14,7 +14,7 @@ def create_data_dir():
         os.mkdir(f"{SAVED_DATA_DIR}/")
 
 
-def save_game(data):
+def save_game(data: dict):
     """
     Send a dictionary of data to be saved. Like:
     data["level"] = 1
@@ -31,7 +31,7 @@ def save_game(data):
     print("Gave saved successfully!")
 
 
-def load_game():
+def load_game() -> dict:
     """
     Function that will be called everytime before starting the game to load saved data
     """
@@ -50,7 +50,7 @@ def load_game():
 
 
 def load_collectibles(
-    collectibles: SpriteList, collectibles_to_remove_pos: list
+    collectibles: SpriteList, collectibles_to_remove_pos: list[tuple[float, float]]
 ) -> SpriteList:
     """
     Function that will determine which collectibles (coins, flags, etc.) were already collected during previous gameplays.

@@ -1,13 +1,17 @@
-""" Module containing a number of different functions """
+"""
+Module containing a number of different functions that will be used to facilitate various game tasks.
+"""
 
 import arcade
+from arcade.sprite_list import SpriteList
+from arcade.texture import Texture
 from arcade.tilemap import process_layer, read_tmx
 
 from ForestKnight.constants import TILE_SCALE
 from ForestKnight.game_saving_utility import load_collectibles
 
 
-def load_texture_pair(filename):
+def load_texture_pair(filename: str) -> list[Texture]:
     """Will load a pair of texture images, one flipped horizontally"""
     return [
         arcade.load_texture(filename),
@@ -15,7 +19,7 @@ def load_texture_pair(filename):
     ]
 
 
-def load_textures(filename, asset_count):
+def load_textures(filename: str, asset_count: int) -> list[Texture]:
     """
     Load bunch of pairs of textures using this function.
     Make sure to include "<asset_count>" in the filename to loop over
@@ -29,7 +33,9 @@ def load_textures(filename, asset_count):
     return textures
 
 
-def level_loader(level, collectibles_pos):
+def level_loader(
+    level: int, collectibles_pos: list[tuple[float, float]]
+) -> dict[str, SpriteList]:
     """
     A function that will load the given level from the base levels directory.
     It will return a dictionary of loaded layers of the given level

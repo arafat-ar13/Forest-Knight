@@ -1,3 +1,8 @@
+"""
+Welcome to Forest Knight! Fight through horrific enemies while collection coins!
+This file is capable to running the entire game. Just run this file to start the game
+"""
+
 import sys
 
 import arcade
@@ -9,6 +14,10 @@ from ForestKnight.screens import TitleView
 
 
 def print_game_info():
+    """
+    Function that prints basic information about the game to the terminal.
+    It's terminal-based for now. The information may be displayed directly inside the game GUI in the future.
+    """
     game_version = "0.7"
     game_state = "Alpha"
     arcade_version = arcade.__version__

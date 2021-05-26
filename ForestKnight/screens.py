@@ -1,3 +1,15 @@
+"""
+This file contains all the code that is needed for all the different screens used in the game.
+Currently the screens are:
+
+Title View that appears first in the game
+Instructions View that comes up when 'I' is pressed from the Title View
+Pause View that comes up by pressing P when the game is actually being played
+Loading View that shows up whenever a significant amount of time is taken to make computations
+
+KnightForestView is the only exception screen that is not located here and is in the the game.py file 
+"""
+
 import arcade
 from arcade.draw_commands import draw_lrtb_rectangle_filled
 from arcade.texture import load_texture

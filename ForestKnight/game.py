@@ -1,3 +1,7 @@
+"""
+Primary game file that contains most of the logic of this game.
+"""
+
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
 from arcade.sound import Sound, load_sound
@@ -20,10 +24,13 @@ from ForestKnight.constants import (
 )
 from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
-from ForestKnight.screens import PauseView
 
 
 class ForestKnightView(arcade.View):
+    """
+    The main View class that runs the actual game code.
+    """
+
     def __init__(self):
         super().__init__()
 
@@ -55,7 +62,7 @@ class ForestKnightView(arcade.View):
         # Level
         self.level = None
 
-    def setup(self, level, load_game=False, loaded_game_data=None):
+    def setup(self, level: int, load_game: bool = False, loaded_game_data: dict = None):
         """
         Method that sets up the given level of the game.
         It also calls other setup methods used in the game.
@@ -69,6 +76,7 @@ class ForestKnightView(arcade.View):
 
         self.setup_characters()
 
+        # We'll only load the game if this is NOT the first time playing it
         if load_game:
             self.load_game_data(loaded_game_data)
 
@@ -78,7 +86,7 @@ class ForestKnightView(arcade.View):
         self.setup_sounds()
         self.setup_images()
 
-    def setup_sprites(self, level):
+    def setup_sprites(self, level: int):
         """Method that sets up all the Sprites (except for Knight and other Enemies)"""
         loaded_sprites = level_loader(level, self.collectibles_to_omit)
 
@@ -112,14 +120,15 @@ class ForestKnightView(arcade.View):
 
         self.knight.setup_sounds()
 
-    def setup_images(self, level=1):
+    def setup_images(self, level: int = 1):
         """Method to set up background image of the current level"""
         if level == 1:
             self.background_image = arcade.load_texture(
                 f"{IMAGES_DIR}/backgrounds/BG.png"
             )
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int):
+        """Method that handles what happens when a key is pressed down"""
         # Knight movement and attack
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = KNIGHT_SPEED
@@ -163,7 +172,8 @@ class ForestKnightView(arcade.View):
 
         return super().on_key_press(symbol, modifiers)
 
-    def on_key_release(self, symbol, modifiers):
+    def on_key_release(self, symbol: int, modifiers: int):
+        """Method that handles what happens when a key is released"""
         if symbol == arcade.key.RIGHT:
             self.knight.change_x = 0
 
@@ -220,7 +230,7 @@ class ForestKnightView(arcade.View):
         # Calling function from gave saving utility
         save_game(data=data_dict)
 
-    def load_game_data(self, data):
+    def load_game_data(self, data: dict):
         """
         Method that takes all the data from the loader function from the game saving utility and correctly sets up the game.
         This method will only be called if the game is NOT being run for the first time
@@ -233,7 +243,7 @@ class ForestKnightView(arcade.View):
         self.collectibles_to_omit = data["collectibles_to_omit"]
 
     def update_viewport(self):
-        """--- Manage Scrolling ---"""
+        """Method that manages and updates the viewport according to where the Knight is"""
 
         # Track if we need to change the viewport
         changed = False
@@ -276,7 +286,8 @@ class ForestKnightView(arcade.View):
                 SCREEN_HEIGHT + self.view_bottom,
             )
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float):
+        """Method that is the main game loop and contains most game logic"""
         self.character_sprites.update_animation()
         self.character_sprites.update()
         self.physics_engine.update()
@@ -308,6 +319,10 @@ class ForestKnightView(arcade.View):
         return super().on_update(delta_time)
 
     def on_draw(self):
+        """
+        We actually have to draw to the display to show anything on the screen.
+        This method handles all the drawing in the game
+        """
         start_render()
 
         # Drawing our loaded background images and setting it
