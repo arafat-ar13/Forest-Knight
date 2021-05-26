@@ -34,7 +34,7 @@ KNIGHT_JUMP_SPEED = 13
 KNIGHT_FACE_RIGHT = 1
 KNIGHT_FACE_LEFT = 2
 KNIGHT_X = 124
-KNIGHT_Y = 124
+KNIGHT_Y = 241
 
 # Control the speed of Knight animation. Increase value to slow down animation
 UPDATES_PER_FRAME = 3
