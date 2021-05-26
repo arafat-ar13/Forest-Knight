@@ -4,16 +4,17 @@ import arcade
 from arcade.window_commands import run
 
 from ForestKnight.constants import GAME_TITLE, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.game import ForestKnightView
 from ForestKnight.screens import TitleView
 
 
 def print_game_info():
-    game_version = "0.6.2"
+    game_version = "0.6.3"
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 24th, 2021"
+    last_commit = "May 26th, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")
@@ -28,7 +29,8 @@ def print_game_info():
 
 def main():
     window = arcade.Window(width=SCREEN_WIDTH, height=SCREEN_HEIGHT, title=GAME_TITLE)
-    title_view = TitleView()
+    game = ForestKnightView
+    title_view = TitleView(game)
     window.show_view(title_view)
 
     run()

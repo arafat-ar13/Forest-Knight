@@ -1,3 +1,4 @@
+from ForestKnight.screens import PauseView
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
 from arcade.sound import Sound, load_sound
@@ -188,7 +189,8 @@ class ForestKnightView(arcade.View):
 
     def pause(self):
         """Method that will bring up a screen that pauses the game"""
-        pass
+        pause_view = PauseView(self)
+        self.window.show_view(pause_view)
 
     def gen_game_data(self):
         """

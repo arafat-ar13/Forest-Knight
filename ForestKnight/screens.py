@@ -1,14 +1,14 @@
 import arcade
+from arcade.draw_commands import draw_lrtb_rectangle_filled
 from arcade.texture import load_texture
 from arcade.window_commands import start_render
 
 from ForestKnight.constants import IMAGES_DIR, SCREEN_HEIGHT, SCREEN_WIDTH
-from ForestKnight.game import ForestKnightView
 from ForestKnight.game_saving_utility import create_data_dir, load_game
 
 
-def load_game_screen(window: arcade.Window):
-    game_view = ForestKnightView()
+def load_game_screen(window: arcade.Window, game_view: arcade.View):
+    gameview = game_view()
     # Checking if the data directory exists or not. If not, create one
     create_data_dir()
 
@@ -24,12 +24,12 @@ def load_game_screen(window: arcade.Window):
         first_time = True
 
     if first_time:
-        game_view.setup(level=level)
+        gameview.setup(level=level)
         print("Game running for the first time")
     else:
-        game_view.setup(level=level, load_game=True, loaded_game_data=loaded_data)
+        gameview.setup(level=level, load_game=True, loaded_game_data=loaded_data)
 
-    window.show_view(game_view)
+    window.show_view(gameview)
 
 
 class TitleView(arcade.View):
@@ -38,8 +38,10 @@ class TitleView(arcade.View):
     Provides a way to show instructions and start the game.
     """
 
-    def __init__(self):
+    def __init__(self, game_view: arcade.View):
         super().__init__()
+
+        self.game_view = game_view
 
         self.background = load_texture(
             f"{IMAGES_DIR}/backgrounds/backgroundColorGrass.png"
@@ -82,10 +84,10 @@ class TitleView(arcade.View):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.ENTER:
-            load_game_screen(self.window)
+            load_game_screen(self.window, self.game_view)
 
         elif symbol == arcade.key.I:
-            instructions_view = InstructionsView()
+            instructions_view = InstructionsView(self.game_view)
             self.window.show_view(instructions_view)
 
         return super().on_key_press(symbol, modifiers)
@@ -134,8 +136,10 @@ class TitleView(arcade.View):
 
 
 class InstructionsView(arcade.View):
-    def __init__(self):
+    def __init__(self, game_view: arcade.View):
         super().__init__()
+
+        self.game_view = game_view
 
         # Setting up button textures
         self.up_button = load_texture(f"{IMAGES_DIR}/gui/up_button.png")
@@ -149,7 +153,7 @@ class InstructionsView(arcade.View):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.ESCAPE:
-            title_view = TitleView()
+            title_view = TitleView(self.game_view)
             self.window.show_view(title_view)
 
         return super().on_key_press(symbol, modifiers)
@@ -206,3 +210,47 @@ class InstructionsView(arcade.View):
         )
 
         return super().on_draw()
+
+
+class PauseView(arcade.View):
+    def __init__(self, game_view: arcade.View):
+        super().__init__()
+
+        self.game_view = game_view
+
+        # Store a semitransparent color to use as an overlay
+        self.fill_color = arcade.make_transparent_color(
+            arcade.color.WHITE, transparency=150
+        )
+
+    def on_draw(self):
+
+        self.game_view.on_draw()
+
+        # Now create a filled rect that covers the current viewport
+        # We get the viewport size from the game view
+        draw_lrtb_rectangle_filled(
+            left=self.game_view.view_left,
+            right=self.game_view.view_left + SCREEN_WIDTH,
+            top=self.game_view.view_bottom + SCREEN_HEIGHT,
+            bottom=self.game_view.view_bottom,
+            color=self.fill_color,
+        )
+
+        # Now show the Pause text
+        arcade.draw_text(
+            "PAUSED P TO CONTINUE",
+            start_x=self.game_view.view_left + 180,
+            start_y=self.game_view.view_bottom + 300,
+            color=arcade.color.INDIGO,
+            font_size=40,
+        )
+
+        return super().on_draw()
+
+    def on_key_press(self, symbol, modifiers):
+
+        if symbol == arcade.key.P:
+            self.game_view.knight.change_x = 0
+            self.game_view.knight.change_y = 0
+            self.window.show_view(self.game_view)
