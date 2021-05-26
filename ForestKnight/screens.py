@@ -8,7 +8,7 @@ from ForestKnight.game_saving_utility import create_data_dir, load_game
 
 
 def load_game_screen(window: arcade.Window, game_view: arcade.View):
-    gameview = game_view()
+    gameview = game_view
     # Checking if the data directory exists or not. If not, create one
     create_data_dir()
 
@@ -84,7 +84,8 @@ class TitleView(arcade.View):
 
     def on_key_press(self, symbol, modifiers):
         if symbol == arcade.key.ENTER:
-            load_game_screen(self.window, self.game_view)
+            loading_view = LoadingView(self.window, self.game_view)
+            self.window.show_view(loading_view)
 
         elif symbol == arcade.key.I:
             instructions_view = InstructionsView(self.game_view)
@@ -254,3 +255,40 @@ class PauseView(arcade.View):
             self.game_view.knight.change_x = 0
             self.game_view.knight.change_y = 0
             self.window.show_view(self.game_view)
+
+        return super().on_key_press(symbol, modifiers)
+
+
+class LoadingView(arcade.View):
+    def __init__(self, window: arcade.Window, game_view: arcade.View):
+        super().__init__()
+
+        self.window = window
+        self.game_view = game_view
+
+        self.timer = 0.1
+        self.should_update = True
+
+    def on_draw(self):
+
+        start_render()
+
+        arcade.draw_text(
+            "Loading...",
+            start_x=385,
+            start_y=300,
+            color=arcade.color.BLUE_SAPPHIRE,
+            font_size=50,
+        )
+
+        return super().on_draw()
+
+    def on_update(self, delta_time):
+        if self.should_update:
+            self.timer -= delta_time
+
+            if self.timer < 0:
+                load_game_screen(self.window, self.game_view)
+                self.should_update = False
+
+        return super().on_update(delta_time)

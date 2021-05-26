@@ -1,4 +1,3 @@
-from ForestKnight.screens import PauseView
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
 from arcade.sound import Sound, load_sound
@@ -21,6 +20,7 @@ from ForestKnight.constants import (
 )
 from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
+from ForestKnight.screens import PauseView
 
 
 class ForestKnightView(arcade.View):
@@ -73,6 +73,7 @@ class ForestKnightView(arcade.View):
             self.load_game_data(loaded_game_data)
 
         self.setup_sprites(self.level)
+        self.update_viewport()
         self.setup_physics_engine()
         self.setup_sounds()
         self.setup_images()
