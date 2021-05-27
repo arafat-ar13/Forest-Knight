@@ -16,6 +16,8 @@ from ForestKnight.constants import (
     IMAGES_DIR,
     KNIGHT_JUMP_SPEED,
     KNIGHT_SPEED,
+    KNIGHT_X,
+    KNIGHT_Y,
     LEFT_VIEWPORT_MARGIN,
     RIGHT_VIEWPORT_MARGIN,
     SCREEN_HEIGHT,
@@ -24,6 +26,7 @@ from ForestKnight.constants import (
 )
 from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
+from ForestKnight.screens import PauseView
 
 
 class ForestKnightView(arcade.View):
@@ -99,7 +102,7 @@ class ForestKnightView(arcade.View):
 
     def setup_characters(self):
         """Method to set up the Knight and other Enemies"""
-        self.knight = Knight()
+        self.knight = Knight(pos_x=KNIGHT_X, pos_y=KNIGHT_Y)
         self.character_sprites.append(self.knight)
         self.character_sprites.preload_textures(self.knight.textures)
 
