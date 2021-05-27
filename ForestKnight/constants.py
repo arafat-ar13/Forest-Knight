@@ -31,8 +31,6 @@ GRAVITY = 1
 # Knight constants
 KNIGHT_SPEED = 4
 KNIGHT_JUMP_SPEED = 13
-KNIGHT_FACE_RIGHT = 1
-KNIGHT_FACE_LEFT = 2
 KNIGHT_X = 124
 KNIGHT_Y = 241
 
@@ -43,4 +41,8 @@ UPDATES_PER_FRAME = 3
 SAVED_DATA_DIR = "saved_game_data"
 
 # Enemy constants
-ZOMBIE_VELOCITY = 2.5
+ZOMBIE_VELOCITY = 2
+
+# Other constants
+FACE_RIGHT = 1
+FACE_LEFT = 2
