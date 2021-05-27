@@ -1,12 +1,5 @@
 """
 This file contains all the code that is needed for all the different screens used in the game.
-Currently the screens are:
-
-Title View that appears first in the game
-Instructions View that comes up when 'I' is pressed from the Title View
-Pause View that comes up by pressing P when the game is actually being played
-Loading View that shows up whenever a significant amount of time is taken to make computations
-
 KnightForestView is the only exception screen that is not located here and is in the the game.py file 
 """
 
@@ -20,6 +13,9 @@ from ForestKnight.game_saving_utility import create_data_dir, load_game
 
 
 def load_game_screen(window: arcade.Window, game_view: arcade.View):
+    """
+    Function that loads the actual game screen after reading available data from the saved file
+    """
     gameview = game_view
     # Checking if the data directory exists or not. If not, create one
     create_data_dir()
@@ -76,7 +72,11 @@ class TitleView(arcade.View):
 
         return super().on_show()
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float):
+        """
+        Update the screen and flash information
+        """
+        
         # First, count down the time
         self.display_timer -= delta_time
 
@@ -94,7 +94,8 @@ class TitleView(arcade.View):
 
         return super().on_update(delta_time)
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int):
+        """Code that leads to other screens based on what key is pressed"""
         if symbol == arcade.key.ENTER:
             loading_view = LoadingView(self.window, self.game_view)
             self.window.show_view(loading_view)
@@ -106,6 +107,7 @@ class TitleView(arcade.View):
         return super().on_key_press(symbol, modifiers)
 
     def on_draw(self):
+        """Draw anything on the screen"""
         arcade.start_render()
 
         arcade.draw_texture_rectangle(
@@ -149,6 +151,11 @@ class TitleView(arcade.View):
 
 
 class InstructionsView(arcade.View):
+    """
+    The view that shows all the ways this game can be played
+    and what keys are required to do different operatoins
+    """
+
     def __init__(self, game_view: arcade.View):
         super().__init__()
 
@@ -164,7 +171,10 @@ class InstructionsView(arcade.View):
             f"{IMAGES_DIR}/backgrounds/backgroundColorGrass.png"
         )
 
-    def on_key_press(self, symbol, modifiers):
+    def on_key_press(self, symbol: int, modifiers: int):
+        """
+        Code that allows escaping from the Instructions View when the Escape key is pressed
+        """
         if symbol == arcade.key.ESCAPE:
             title_view = TitleView(self.game_view)
             self.window.show_view(title_view)
@@ -172,6 +182,7 @@ class InstructionsView(arcade.View):
         return super().on_key_press(symbol, modifiers)
 
     def on_draw(self):
+        """Draw instructions on the screen"""
         start_render()
 
         # Drawing the background image
@@ -226,6 +237,10 @@ class InstructionsView(arcade.View):
 
 
 class PauseView(arcade.View):
+    """
+    View that shows up only in `ForestKnightView` to pause the game when 'P' is pressed
+    """
+
     def __init__(self, game_view: arcade.View):
         super().__init__()
 
@@ -237,6 +252,7 @@ class PauseView(arcade.View):
         )
 
     def on_draw(self):
+        """Draw the 'Paused' text on the screen"""
 
         self.game_view.on_draw()
 
@@ -262,6 +278,7 @@ class PauseView(arcade.View):
         return super().on_draw()
 
     def on_key_press(self, symbol, modifiers):
+        """Switch off PauseView by again pressing 'P'"""
 
         if symbol == arcade.key.P:
             self.game_view.knight.change_x = 0
@@ -272,6 +289,10 @@ class PauseView(arcade.View):
 
 
 class LoadingView(arcade.View):
+    """
+    Loading View that shows up whenever a significant amount of time is taken to make computations
+    """
+
     def __init__(self, window: arcade.Window, game_view: arcade.View):
         super().__init__()
 
@@ -282,6 +303,7 @@ class LoadingView(arcade.View):
         self.should_update = True
 
     def on_draw(self):
+        """Draw the loading text on the screen"""
 
         start_render()
 
@@ -295,7 +317,9 @@ class LoadingView(arcade.View):
 
         return super().on_draw()
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float):
+        """Wait a tiny bit of time before proceeding to the next view"""
+
         if self.should_update:
             self.timer -= delta_time
 
