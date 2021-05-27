@@ -2,12 +2,15 @@
 Module containing a number of different functions that will be used to facilitate various game tasks.
 """
 
+import os
+
 import arcade
 from arcade.sprite_list import SpriteList
 from arcade.texture import Texture
 from arcade.tilemap import process_layer, read_tmx
 
 from ForestKnight.constants import TILE_SCALE
+import re
 from ForestKnight.game_saving_utility import load_collectibles
 
 
@@ -111,3 +114,26 @@ def level_loader(
     }
 
     return loaded_layers_dict
+
+
+def determine_asset_count(path: str, asset_type: str) -> int:
+    """
+    Function that iterates over all the files in the given `path` and figures out
+    the number of assets in there according to the given `asset_type` by using Regular Expressions
+    """
+    BASE_DIR = os.getcwd()
+
+    os.chdir(f"{path}/")
+    files = os.listdir()
+    assets = []
+
+    for file in files:
+        if re.search(fr"\b{asset_type}\b", file, flags=re.I):
+            assets.append(file)
+
+    count = len(assets)
+
+    os.chdir(BASE_DIR)
+
+    return count        
+

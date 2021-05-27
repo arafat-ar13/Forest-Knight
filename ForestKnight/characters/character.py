@@ -9,7 +9,11 @@ from ForestKnight.constants import (
     FACE_RIGHT,
     UPDATES_PER_FRAME,
 )
-from ForestKnight.helper_functions import load_texture_pair, load_textures
+from ForestKnight.helper_functions import (
+    determine_asset_count,
+    load_texture_pair,
+    load_textures,
+)
 
 
 class Character(arcade.AnimatedWalkingSprite):
@@ -20,7 +24,7 @@ class Character(arcade.AnimatedWalkingSprite):
     """
 
     def __init__(self, pos_x: float, pos_y: float) -> None:
-        super().__init__(self)
+        super().__init__()
 
         # Position and Scaling
         self.center_x = pos_x
@@ -81,7 +85,8 @@ class Character(arcade.AnimatedWalkingSprite):
 
         # Setting up idle textures
         for idle_right, idle_left in load_textures(
-            f"{texture_path}/Idle (<asset_count>).png", 10
+            f"{texture_path}/Idle (<asset_count>).png",
+            determine_asset_count(texture_path, "Idle"),
         ):
             self.idle_right_textures.append(idle_right)
             self.idle_left_textures.append(idle_left)
@@ -89,7 +94,8 @@ class Character(arcade.AnimatedWalkingSprite):
 
         # Setting up walking/running textures
         for walk_right, walk_left in load_textures(
-            f"{texture_path}/{movement_type} (<asset_count>).png", 10
+            f"{texture_path}/{movement_type} (<asset_count>).png",
+            determine_asset_count(texture_path, movement_type),
         ):
             self.walk_right_textures.append(walk_right)
             self.walk_left_textures.append(walk_left)
@@ -97,7 +103,8 @@ class Character(arcade.AnimatedWalkingSprite):
 
         # Setting up attack textures
         for attack_right, attack_left in load_textures(
-            f"{texture_path}/Attack (<asset_count>).png", 10
+            f"{texture_path}/Attack (<asset_count>).png",
+            determine_asset_count(texture_path, "Attack"),
         ):
             self.attack_right_textures.append(attack_right)
             self.attack_left_textures.append(attack_left)
@@ -105,7 +112,8 @@ class Character(arcade.AnimatedWalkingSprite):
 
         # Setting up dying textures
         for dying_right, dying_left in load_textures(
-            f"{texture_path}/Dead (<asset_count>).png", 10
+            f"{texture_path}/Dead (<asset_count>).png",
+            determine_asset_count(texture_path, "Dead"),
         ):
             self.dying_right_textures.append(dying_right)
             self.dying_left_textures.append(dying_left)
