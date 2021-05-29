@@ -19,7 +19,7 @@ from ForestKnight.helper_functions import (
 class Character(arcade.AnimatedWalkingSprite):
     """
     Generic Character class based on `arcade.AnimatedWalkingSprite` that all characters - Knight, Zombie and Ninja - will inherit from.
-    This makes reduction is code while still having no functionality decreases.
+    This makes reduction in code while still having no functionality decreases.
     Add and override methods and attributes as needed
     """
 
@@ -54,6 +54,11 @@ class Character(arcade.AnimatedWalkingSprite):
         self.dying_right_textures = []
         self.dying_left_textures = []
 
+        # Character stats -- Override them to include actual stats
+        self.health = None
+        self.attack_points = None
+        self.speed = None
+
         # Variables to control animation and sound speeds
         self.texture_frame_counter = 0
 
@@ -68,13 +73,9 @@ class Character(arcade.AnimatedWalkingSprite):
         Attack textures
         Dying textures
 
-        Don't override this method. To add custom textures (textures not already setup by this method),
-        do it directly in the `__init__` method of the class that inherits from this base class.
+        Override this method to also setup custom textures that are not already setup by this method.
 
-        movement_type param: Send 'Walk' or 'Run' based on what the sprite's default movement will be.
-        If a character has both Running and Walking textures, set up any one you desire through this method, either
-        Run or Walk textures. If running textures are set up by this method, set up walking textures through a custom method.
-        Or vice versa.
+        param movement_type: Send either "Walk" or "Run" that will be the default movement method of the Sprite.
         """
 
         # Setting up standing textures
@@ -132,7 +133,7 @@ class Character(arcade.AnimatedWalkingSprite):
 
     def idle_animation(self):
         """
-        Method that contains the animation texture for when the Knight is standing idle
+        Method that contains the animation texture for when the Character is standing idle
         """
         idle_fps = UPDATES_PER_FRAME + 1
 
@@ -182,7 +183,6 @@ class Character(arcade.AnimatedWalkingSprite):
             >= len(self.dying_right_textures) * UPDATES_PER_FRAME
         ):
             self.texture_frame_counter = 0
-            self.is_dying = False
 
         if self.state == FACE_RIGHT:
             self.texture = self.dying_right_textures[

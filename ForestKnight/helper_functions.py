@@ -3,6 +3,7 @@ Module containing a number of different functions that will be used to facilitat
 """
 
 import os
+import re
 
 import arcade
 from arcade.sprite_list import SpriteList
@@ -10,7 +11,6 @@ from arcade.texture import Texture
 from arcade.tilemap import process_layer, read_tmx
 
 from ForestKnight.constants import TILE_SCALE
-import re
 from ForestKnight.game_saving_utility import load_collectibles
 
 
@@ -135,5 +135,4 @@ def determine_asset_count(path: str, asset_type: str) -> int:
 
     os.chdir(BASE_DIR)
 
-    return count        
-
+    return count

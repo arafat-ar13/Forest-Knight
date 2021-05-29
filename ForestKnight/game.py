@@ -4,18 +4,17 @@ Primary game file that contains most of the logic of this game.
 
 import arcade
 from arcade.physics_engines import PhysicsEnginePlatformer
-from arcade.sound import Sound, load_sound
+from arcade.sound import load_sound
 from arcade.sprite_list import SpriteList, check_for_collision_with_list
 from arcade.window_commands import start_render
 
+from ForestKnight.characters.enemies.zombie_male import ZombieMale
 from ForestKnight.characters.player.knight import Knight
 from ForestKnight.constants import (
     AUDIO_DIR,
     BOTTOM_VIEWPORT_MARGIN,
     GRAVITY,
     IMAGES_DIR,
-    KNIGHT_JUMP_SPEED,
-    KNIGHT_SPEED,
     KNIGHT_X,
     KNIGHT_Y,
     LEFT_VIEWPORT_MARGIN,
@@ -23,6 +22,7 @@ from ForestKnight.constants import (
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
     TOP_VIEWPORT_MARGIN,
+    ZOMBIE_MALE_LEVEL_1_POSITIONS,
 )
 from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
@@ -44,6 +44,7 @@ class ForestKnightView(arcade.View):
         # Sprites
         self.knight = None
         self.character_sprites = None
+        self.enemy_sprites = None
         self.platforms = None
         self.foregrounds = None
         self.backgrounds = None
@@ -72,18 +73,19 @@ class ForestKnightView(arcade.View):
         Send `load_game_data` only if the game is being loaded from the hard disk
         """
         self.character_sprites = SpriteList()
+        self.enemy_sprites = SpriteList()
 
         self.collectibles_to_omit = []
 
         self.level = level
 
+        self.setup_sprites(self.level)
         self.setup_characters()
 
         # We'll only load the game if this is NOT the first time playing it
         if load_game:
             self.load_game_data(loaded_game_data)
 
-        self.setup_sprites(self.level)
         self.update_viewport()
         self.setup_physics_engine()
         self.setup_sounds()
@@ -106,6 +108,16 @@ class ForestKnightView(arcade.View):
         self.character_sprites.append(self.knight)
         self.character_sprites.preload_textures(self.knight.textures)
 
+        for pos in ZOMBIE_MALE_LEVEL_1_POSITIONS:
+            pos_x = pos[0]
+            pos_y = pos[1]
+
+            enemy = ZombieMale(pos_x, pos_y)
+            self.enemy_sprites.append(enemy)
+
+        for enemy in self.enemy_sprites:
+            self.enemy_sprites.preload_textures(enemy.textures)
+
     def setup_physics_engine(self):
         """Method to set up arcade.PhysicsEnginePlatformer"""
         self.physics_engine = PhysicsEnginePlatformer(
@@ -119,7 +131,7 @@ class ForestKnightView(arcade.View):
         self.background_music = load_sound(f"{AUDIO_DIR}/backgroundMusic2.mp3")
 
         # We'll play the background music during initial setup
-        self.background_play = Sound.play(self.background_music, volume=0.2)
+        # self.background_play = Sound.play(self.background_music, volume=0.2)
 
         self.knight.setup_sounds()
 
@@ -134,24 +146,24 @@ class ForestKnightView(arcade.View):
         """Method that handles what happens when a key is pressed down"""
         # Knight movement and attack
         if symbol == arcade.key.RIGHT:
-            self.knight.change_x = KNIGHT_SPEED
+            self.knight.change_x = self.knight.speed
 
         elif symbol == arcade.key.LEFT:
-            self.knight.change_x = -KNIGHT_SPEED
+            self.knight.change_x = -(self.knight.speed)
 
         elif symbol == arcade.key.UP:
             if (
                 self.physics_engine.can_jump()
                 and not self.physics_engine.is_on_ladder()
             ):
-                self.knight.change_y = KNIGHT_JUMP_SPEED
+                self.knight.change_y = self.knight.jump_speed
                 self.knight.jump_sound.play()
             elif self.physics_engine.is_on_ladder():
-                self.knight.change_y = KNIGHT_SPEED
+                self.knight.change_y = self.knight.speed
 
         elif symbol == arcade.key.DOWN:
             if self.physics_engine.is_on_ladder():
-                self.knight.change_y = -KNIGHT_SPEED
+                self.knight.change_y = -(self.knight.speed)
 
         elif symbol == arcade.key.SPACE:
             self.knight.is_attacking = True
@@ -172,6 +184,9 @@ class ForestKnightView(arcade.View):
 
         if symbol == arcade.key.G:
             self.gen_game_data()
+
+        if symbol == arcade.key.V:
+            print(self.knight.position)
 
         return super().on_key_press(symbol, modifiers)
 
@@ -293,13 +308,15 @@ class ForestKnightView(arcade.View):
         """Method that is the main game loop and contains most game logic"""
         self.character_sprites.update_animation()
         self.character_sprites.update()
+        self.enemy_sprites.update_animation()
+        self.enemy_sprites.update()
         self.physics_engine.update()
-
-        if self.knight.is_attacking:
-            self.knight.attack()
 
         if self.knight.is_dying:
             self.knight.die()
+
+        if self.knight.is_attacking:
+            self.knight.attack()
 
         if (
             not self.knight.is_moving
@@ -318,6 +335,10 @@ class ForestKnightView(arcade.View):
             coin.kill()
             self.knight.score += 1
             self.collectible_sound.play()
+
+        for enemy in self.enemy_sprites:
+            # Enemies will always be on the lookout for the Knight
+            enemy.detect_knight(self.knight)
 
         return super().on_update(delta_time)
 
@@ -342,6 +363,7 @@ class ForestKnightView(arcade.View):
         self.ladders.draw()
         self.collectibles.draw()
         self.character_sprites.draw()
+        self.enemy_sprites.draw()
         self.dont_touch.draw()
         self.foregrounds.draw()
 

@@ -7,6 +7,8 @@ from ForestKnight.characters.character import Character
 from ForestKnight.constants import (
     AUDIO_DIR,
     KNIGHT_IMAGES_DIR,
+    KNIGHT_JUMP_SPEED,
+    KNIGHT_SPEED,
 )
 
 
@@ -33,6 +35,9 @@ class Knight(Character):
         # Knight's stats
         self.score = 0
         self.health = 50
+        self.attack_points = 10
+        self.speed = KNIGHT_SPEED
+        self.jump_speed = KNIGHT_JUMP_SPEED
 
         # Variables to control Knight sound speeds
         self.sound_frame_counter = 0
