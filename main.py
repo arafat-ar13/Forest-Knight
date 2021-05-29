@@ -18,12 +18,12 @@ def print_game_info():
     Function that prints basic information about the game to the terminal.
     It's terminal-based for now. The information may be displayed directly inside the game GUI in the future.
     """
-    game_version = "0.7"
+    game_version = "0.7.5"
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 27th, 2021"
+    last_commit = "May 29th, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")
