@@ -4,12 +4,15 @@ KnightForestView is the only exception screen that is not located here and is in
 """
 
 import arcade
+import arcade.gui
 from arcade.draw_commands import draw_lrtb_rectangle_filled
+from arcade.gui import UIManager
 from arcade.texture import load_texture
 from arcade.window_commands import start_render
 
-from ForestKnight.constants import IMAGES_DIR, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.constants import FONTS_DIR, GAME_VERSION, IMAGES_DIR, SCREEN_HEIGHT, SCREEN_WIDTH
 from ForestKnight.game_saving_utility import create_data_dir, load_game
+from ForestKnight.gui import Button, Label
 
 
 def load_game_screen(window: arcade.Window, game_view: arcade.View):
@@ -46,22 +49,18 @@ class TitleView(arcade.View):
     Provides a way to show instructions and start the game.
     """
 
-    def __init__(self, game_view: arcade.View):
+    def __init__(self, game_view: arcade.View, *args):
         super().__init__()
 
         self.game_view = game_view
 
+        # Initializing UI Manager
+        self.ui_manager = UIManager()
+
         self.background = load_texture(
-            f"{IMAGES_DIR}/backgrounds/backgroundColorGrass.png"
+            f"{IMAGES_DIR}/backgrounds/backgroundColorForest.png"
         )
         self.play_button = load_texture(f"{IMAGES_DIR}/gui/play_button.png")
-
-        # Set our display timer
-        self.display_timer = 2.0
-
-        # Options to start game or show instructions
-        self.show_start_game = False
-        self.show_instructions = False
 
     def on_show(self):
         """This is run once when we switch to this view"""
@@ -70,41 +69,58 @@ class TitleView(arcade.View):
         # to reset the viewport back to the start so we can see what we draw.
         arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
 
+        self.ui_manager.purge_ui_elements()
+
+        # Adding 'Game Start' button
+        start_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
+        button = Button(
+            center_x=SCREEN_WIDTH // 2,
+            center_y=280,
+            normal_texture=start_button,
+            onclick_view=LoadingView,
+            game_view=self.game_view,
+            window=self.window,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'Game Start' label
+        label = Label(
+            "Start Game",
+            center_x=SCREEN_WIDTH // 2,
+            center_y=280,
+            color=arcade.color.FIRE_ENGINE_RED,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Adding 'Instructions' button
+        instructions_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
+        button = Button(
+            center_x=SCREEN_WIDTH // 2,
+            center_y=190,
+            normal_texture=instructions_button,
+            onclick_view=InstructionsView,
+            game_view=self.game_view,
+            window=self.window,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'Instructions' label
+        label = Label(
+            "Instructions",
+            center_x=SCREEN_WIDTH // 2,
+            center_y=190,
+            color=arcade.color.FIRE_ENGINE_RED,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
         return super().on_show()
 
-    def on_update(self, delta_time: float):
-        """
-        Update the screen and flash information
-        """
-        
-        # First, count down the time
-        self.display_timer -= delta_time
+    def on_hide_view(self):
+        self.ui_manager.unregister_handlers()
 
-        # If the timer has run out, we toggle the instructions and 'start game'
-        if self.display_timer < 0:
-            self.show_start_game = (
-                not self.show_start_game
-            )  # Toggle whether to show the 'start game' option
-            self.show_instructions = (
-                not self.show_instructions
-            )  # Toggle whether to show the instructions option
-            self.display_timer = (
-                1.0  # And reset the timer so the instructions flash slowly
-            )
-
-        return super().on_update(delta_time)
-
-    def on_key_press(self, symbol: int, modifiers: int):
-        """Code that leads to other screens based on what key is pressed"""
-        if symbol == arcade.key.ENTER:
-            loading_view = LoadingView(self.window, self.game_view)
-            self.window.show_view(loading_view)
-
-        elif symbol == arcade.key.I:
-            instructions_view = InstructionsView(self.game_view)
-            self.window.show_view(instructions_view)
-
-        return super().on_key_press(symbol, modifiers)
+        return super().on_hide_view()
 
     def on_draw(self):
         """Draw anything on the screen"""
@@ -121,31 +137,22 @@ class TitleView(arcade.View):
         arcade.draw_text(
             "Welcome to Forest Knight",
             start_x=SCREEN_WIDTH // 2,
-            start_y=SCREEN_HEIGHT // 2,
+            start_y=SCREEN_HEIGHT - 100,
             color=arcade.color.CHINESE_VIOLET,
+            font_name=f"{FONTS_DIR}/WarPriestRegular.ttf",
             font_size=50,
             anchor_x="center",
         )
 
-        if self.show_start_game:
-            arcade.draw_text(
-                "Enter to Start Game",
-                start_x=SCREEN_WIDTH // 2,
-                start_y=220,
-                color=arcade.color.INDIGO,
-                font_size=40,
-                anchor_x="center",
-            )
-
-        if self.show_instructions:
-            arcade.draw_text(
-                "Press 'I' for instructions",
-                start_x=SCREEN_WIDTH // 2,
-                start_y=150,
-                color=arcade.color.INDIGO,
-                font_size=40,
-                anchor_x="center",
-            )
+        # Drawing game version
+        arcade.draw_text(
+            f"Version: {GAME_VERSION}",
+            start_x=20,
+            start_y=20,
+            font_name=f"{FONTS_DIR}/Wooden Log.ttf",
+            font_size=20,
+            color=arcade.color.ELECTRIC_GREEN,
+        )
 
         return super().on_draw()
 
@@ -156,7 +163,7 @@ class InstructionsView(arcade.View):
     and what keys are required to do different operatoins
     """
 
-    def __init__(self, game_view: arcade.View):
+    def __init__(self, game_view: arcade.View, *args):
         super().__init__()
 
         self.game_view = game_view
@@ -293,11 +300,11 @@ class LoadingView(arcade.View):
     Loading View that shows up whenever a significant amount of time is taken to make computations
     """
 
-    def __init__(self, window: arcade.Window, game_view: arcade.View):
+    def __init__(self, game_view: arcade.View, window: arcade.Window):
         super().__init__()
 
-        self.window = window
         self.game_view = game_view
+        self.window = window
 
         self.timer = 0.1
         self.should_update = True
