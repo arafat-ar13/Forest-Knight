@@ -8,12 +8,22 @@ The game is still in its alpha stages and is being actively developed by me. For
 
 * Using the [Arcade Library](https://github.com/pythonarcade/arcade) to develop this game
 * Using the [Tiled Map Editor](https://github.com/bjorn/tiled) to create all the different levels of this game
-* Using royalty-free game assets from: [Kenney NL](https://kenney.nl) and [Games Art 2d](https://www.gameart2d.com). These sites provided assets like players, enemies, platforms, GUIs, tilesets, audio etc.
 
 ## Things left to complete
 
 Check out `TODO.md`
 
-## Latest feature implemented from `TODO.md`
+## Assets used
 
-* Implemented Title and Pause screens. Though the GUI isn't that good, improvements are on the way
+Please check `CREDITS.md`
+
+## Latest features from `TODO.md`
+
+* Added decently-working Enemy auto-movement toward Knight and attack
+
+## Features currently working on
+
+* Mainly working on improving the GUI used throughout the game:
+  * Using `arcade.gui` modules to build a better GUI in all the screens used in the game
+  * Add a "Credits" screen
+  * Add more functionality like save, exit, etc. in the Pause screen during gameplay
