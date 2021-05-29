@@ -4,10 +4,12 @@
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 GAME_TITLE = "Forest Knight"
+GAME_VERSION = "0.7.7"
 
 # Constants to hold to path to common directories
 IMAGES_DIR = "assets/images"
 AUDIO_DIR = "assets/audio"
+FONTS_DIR = "assets/fonts"
 KNIGHT_IMAGES_DIR = "assets/images/player/knight"
 NINJA_IMAGES_DIR = "assets/images/enemies/ninja"
 ZOMBIE_FEMALE_IMAGES_DIR = "assets/images/enemies/zombie_female"
