@@ -8,7 +8,7 @@ import sys
 import arcade
 from arcade.window_commands import run
 
-from ForestKnight.constants import GAME_TITLE, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.constants import GAME_TITLE, GAME_VERSION, SCREEN_HEIGHT, SCREEN_WIDTH
 from ForestKnight.game import ForestKnightView
 from ForestKnight.screens import TitleView
 
@@ -18,7 +18,7 @@ def print_game_info():
     Function that prints basic information about the game to the terminal.
     It's terminal-based for now. The information may be displayed directly inside the game GUI in the future.
     """
-    game_version = "0.7.5"
+    game_version = GAME_VERSION
     game_state = "Alpha"
     arcade_version = arcade.__version__
     python_version = sys.version
