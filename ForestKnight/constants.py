@@ -16,6 +16,7 @@ ZOMBIE_MALE_IMAGES_DIR = "assets/images/enemies/zombie_male"
 # Scaling
 TILE_SCALE = 0.5
 CHARACTER_SCALE = 0.16
+ENEMY_SCALE = 0.2
 
 # Player scrolling
 # How many pixels to keep as a minimum margin between the character
@@ -41,7 +42,8 @@ UPDATES_PER_FRAME = 3
 SAVED_DATA_DIR = "saved_game_data"
 
 # Enemy constants
-ZOMBIE_VELOCITY = 2
+ZOMBIE_VELOCITY = 3
+ZOMBIE_MALE_LEVEL_1_POSITIONS = [(290.0, 430.25)]
 
 # Other constants
 FACE_RIGHT = 1
