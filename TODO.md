@@ -21,16 +21,19 @@
 
 ### Enemies
 
-- [ ] Code out the first enemy: Zombie Male
-- [ ] Implement enemy stats like their attack points and health and basic fixed movement
+- [x] Code out the first enemy: Zombie Male
+- [x] Enemy movement mechanism
 - [ ] Enemy attack mechanism
-
+- [ ] Advanced Movements
+ 
 ### Screens
 
 - [x] Title Screen that shows up first when game is run
 - [x] Instructions Screen
 - [x] Pause Screen
 - [x] Loading Screen
+- [ ] Credits Screen
+- [ ] Add functionality like Exit, Save, etc. in the Pause Screen
 - [ ] Decorate all the Screens with better fonts and GUI elements like buttons
 
 ## Miscellaneous Stuff
