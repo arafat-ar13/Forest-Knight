@@ -23,7 +23,7 @@ def print_game_info():
     arcade_version = arcade.__version__
     python_version = sys.version
     developer = "Arafat Khan"
-    last_commit = "May 29th, 2021"
+    last_commit = "May 30th, 2021"
 
     print("\n")
     print("Welcome to Forest Knight!")

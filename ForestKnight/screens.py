@@ -10,9 +10,16 @@ from arcade.gui import UIManager
 from arcade.texture import load_texture
 from arcade.window_commands import start_render
 
-from ForestKnight.constants import FONTS_DIR, GAME_VERSION, IMAGES_DIR, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.constants import (
+    DEVELOPER,
+    FONTS_DIR,
+    GAME_VERSION,
+    IMAGES_DIR,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+)
 from ForestKnight.game_saving_utility import create_data_dir, load_game
-from ForestKnight.gui import Button, Label
+from ForestKnight.gui import Label, LinkButton, ViewChangingButton
 
 
 def load_game_screen(window: arcade.Window, game_view: arcade.View):
@@ -43,24 +50,26 @@ def load_game_screen(window: arcade.Window, game_view: arcade.View):
     window.show_view(gameview)
 
 
-class TitleView(arcade.View):
-    """
-    Displays a title screen and prompts the user to begin the game.
-    Provides a way to show instructions and start the game.
-    """
+class View(arcade.View):
+    """Custom `arcade.View` subclass that will contain commonly used attributes. Inherit from this to access them."""
 
-    def __init__(self, game_view: arcade.View, *args):
+    def __init__(self):
         super().__init__()
-
-        self.game_view = game_view
 
         # Initializing UI Manager
         self.ui_manager = UIManager()
 
+        # Setting up button textures
+        self.up_button = load_texture(f"{IMAGES_DIR}/gui/up_button.png")
+        self.right_button = load_texture(f"{IMAGES_DIR}/gui/right_button.png")
+        self.left_button = load_texture(f"{IMAGES_DIR}/gui/left_button.png")
+        self.space_bar = load_texture(f"{IMAGES_DIR}/gui/space_bar.png")
+        self.lime_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
+
+        # Setting up our background
         self.background = load_texture(
             f"{IMAGES_DIR}/backgrounds/backgroundColorForest.png"
         )
-        self.play_button = load_texture(f"{IMAGES_DIR}/gui/play_button.png")
 
     def on_show(self):
         """This is run once when we switch to this view"""
@@ -69,11 +78,33 @@ class TitleView(arcade.View):
         # to reset the viewport back to the start so we can see what we draw.
         arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
 
+        return super().on_show()
+
+    def on_hide_view(self):
+        """This in run once when we move away from this view"""
+
+        self.ui_manager.unregister_handlers()
+
+        return super().on_hide_view()
+
+
+class TitleView(View):
+    """
+    Displays a title screen and prompts the user to begin the game.
+    Provides a way to show instructions, credits and start the game.
+    """
+
+    def __init__(self, game_view: arcade.View, *args):
+        super().__init__()
+
+        self.game_view = game_view
+
+    def on_show(self):
         self.ui_manager.purge_ui_elements()
 
         # Adding 'Game Start' button
-        start_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
-        button = Button(
+        start_button = self.lime_button
+        button = ViewChangingButton(
             center_x=SCREEN_WIDTH // 2,
             center_y=280,
             normal_texture=start_button,
@@ -89,13 +120,14 @@ class TitleView(arcade.View):
             center_x=SCREEN_WIDTH // 2,
             center_y=280,
             color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
             parent_button=button,
         )
         self.ui_manager.add_ui_element(label)
 
         # Adding 'Instructions' button
-        instructions_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
-        button = Button(
+        instructions_button = self.lime_button
+        button = ViewChangingButton(
             center_x=SCREEN_WIDTH // 2,
             center_y=190,
             normal_texture=instructions_button,
@@ -111,20 +143,39 @@ class TitleView(arcade.View):
             center_x=SCREEN_WIDTH // 2,
             center_y=190,
             color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Adding 'Credits' button
+        credits_button = self.lime_button
+        button = ViewChangingButton(
+            center_x=SCREEN_WIDTH // 2,
+            center_y=100,
+            normal_texture=credits_button,
+            onclick_view=CreditsView,
+            game_view=self.game_view,
+            window=self.window,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'Credits' label
+        label = Label(
+            "Credits",
+            center_x=SCREEN_WIDTH // 2,
+            center_y=100,
+            color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
             parent_button=button,
         )
         self.ui_manager.add_ui_element(label)
 
         return super().on_show()
 
-    def on_hide_view(self):
-        self.ui_manager.unregister_handlers()
-
-        return super().on_hide_view()
-
     def on_draw(self):
         """Draw anything on the screen"""
-        arcade.start_render()
+        start_render()
 
         arcade.draw_texture_rectangle(
             (SCREEN_WIDTH // 2),
@@ -134,6 +185,7 @@ class TitleView(arcade.View):
             self.background,
         )
 
+        # Drawing game name
         arcade.draw_text(
             "Welcome to Forest Knight",
             start_x=SCREEN_WIDTH // 2,
@@ -157,7 +209,7 @@ class TitleView(arcade.View):
         return super().on_draw()
 
 
-class InstructionsView(arcade.View):
+class InstructionsView(View):
     """
     The view that shows all the ways this game can be played
     and what keys are required to do different operatoins
@@ -167,16 +219,6 @@ class InstructionsView(arcade.View):
         super().__init__()
 
         self.game_view = game_view
-
-        # Setting up button textures
-        self.up_button = load_texture(f"{IMAGES_DIR}/gui/up_button.png")
-        self.right_button = load_texture(f"{IMAGES_DIR}/gui/right_button.png")
-        self.left_button = load_texture(f"{IMAGES_DIR}/gui/left_button.png")
-        self.space_bar = load_texture(f"{IMAGES_DIR}/gui/space_bar.png")
-
-        self.background = load_texture(
-            f"{IMAGES_DIR}/backgrounds/backgroundColorGrass.png"
-        )
 
     def on_key_press(self, symbol: int, modifiers: int):
         """
@@ -295,7 +337,7 @@ class PauseView(arcade.View):
         return super().on_key_press(symbol, modifiers)
 
 
-class LoadingView(arcade.View):
+class LoadingView(View):
     """
     Loading View that shows up whenever a significant amount of time is taken to make computations
     """
@@ -335,3 +377,144 @@ class LoadingView(arcade.View):
                 self.should_update = False
 
         return super().on_update(delta_time)
+
+
+class CreditsView(View):
+    """
+    View that gives information about who made the game and stuff like that
+    """
+
+    def __init__(self, game_view: arcade.View, *args):
+        super().__init__()
+
+        self.game_view = game_view
+
+        self.python_logo = load_texture(f"{IMAGES_DIR}/python_powered.png")
+
+        # Store a semitransparent color to use as an overlay
+        self.fill_color = arcade.make_transparent_color(
+            arcade.color.WHITE, transparency=150
+        )
+
+    def on_show(self):
+        """Code that is run only once when this view is shown"""
+
+        # Adding a 'back button' that allows to close this view
+        back_button = self.left_button
+        button = ViewChangingButton(
+            center_x=50,
+            center_y=50,
+            normal_texture=back_button,
+            onclick_view=TitleView,
+            game_view=self.game_view,
+            window=self.window,
+            width=50,
+            height=50,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'About Me' button
+        about_me = self.lime_button
+        button = LinkButton(
+            center_x=(SCREEN_WIDTH // 2) - 150,
+            center_y=(SCREEN_HEIGHT // 2) - 50,
+            normal_texture=about_me,
+            link="https://arafat-ar13.github.io",
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'About Me' label
+        label = Label(
+            center_x=(SCREEN_WIDTH // 2) - 150,
+            center_y=(SCREEN_HEIGHT // 2) - 50,
+            text="About Me",
+            on_top_of_button=True,
+            parent_button=button,
+            color=arcade.color.FIRE_ENGINE_RED,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Adding 'GitHub Repository' button
+        github_repo = self.lime_button
+        button = LinkButton(
+            center_x=(SCREEN_WIDTH // 2) + 150,
+            center_y=(SCREEN_HEIGHT // 2) - 50,
+            normal_texture=github_repo,
+            link="https://github.com/arafat-ar13/Forest-Knight",
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'GitHub Repository' label
+        label = Label(
+            center_x=(SCREEN_WIDTH // 2) + 150,
+            center_y=(SCREEN_HEIGHT // 2) - 50,
+            text="Game Code",
+            on_top_of_button=True,
+            parent_button=button,
+            color=arcade.color.FIRE_ENGINE_RED,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Adding a link to the Python official website with pride!
+        python_button = LinkButton(
+            center_x=(SCREEN_WIDTH // 2) - 200 + 580,
+            center_y=(SCREEN_HEIGHT // 2) - 280,
+            normal_texture=self.python_logo,
+            link="https://python.org"
+        )
+        python_button.scale = 0.2
+        self.ui_manager.add_ui_element(python_button)
+
+        return super().on_show()
+
+    def on_draw(self):
+        """Draws anything to the screen"""
+        start_render()
+
+        # Drawing the background image
+        arcade.draw_texture_rectangle(
+            (SCREEN_WIDTH // 2),
+            (SCREEN_HEIGHT // 2),
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            self.background,
+        )
+
+        # Blur the background
+        draw_lrtb_rectangle_filled(
+            left=self.game_view.view_left,
+            right=self.game_view.view_left + SCREEN_WIDTH,
+            top=self.game_view.view_bottom + SCREEN_HEIGHT,
+            bottom=self.game_view.view_bottom,
+            color=self.fill_color,
+        )
+
+        # --- Drawing our credits ---
+        arcade.draw_text(
+            f"Game Version: {GAME_VERSION}",
+            start_x=(SCREEN_WIDTH // 2) - 150,
+            start_y=(SCREEN_HEIGHT // 2) + 200,
+            color=arcade.color.BRICK_RED,
+            font_name=f"{FONTS_DIR}/FrostbiteBossFight.ttf",
+            font_size=35,
+        )
+
+        arcade.draw_text(
+            f"Game made by: {DEVELOPER}",
+            start_x=(SCREEN_WIDTH // 2) - 250,
+            start_y=(SCREEN_HEIGHT // 2) + 150,
+            color=arcade.color.BRICK_RED,
+            font_name=f"{FONTS_DIR}/FrostbiteBossFight.ttf",
+            font_size=35,
+        )
+
+        arcade.draw_text(
+            f"Game is made using the Python Arcade Library",
+            start_x=(SCREEN_WIDTH // 2) - 350,
+            start_y=(SCREEN_HEIGHT // 2) + 100,
+            color=arcade.color.BRICK_RED,
+            font_name=f"{FONTS_DIR}/FrostbiteBossFight.ttf",
+            font_size=35,
+        )
+
+        return super().on_draw()

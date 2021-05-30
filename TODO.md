@@ -32,7 +32,7 @@
 - [x] Instructions Screen
 - [x] Pause Screen
 - [x] Loading Screen
-- [ ] Credits Screen
+- [x] Credits Screen
 - [ ] Add functionality like Exit, Save, etc. in the Pause Screen
 - [ ] Decorate all the Screens with better fonts and GUI elements like buttons
 

@@ -2,6 +2,8 @@
 
 A adventure Platformer game written in Python using the Arcade library
 
+![Game Demo Image](assets/images/game_demo.png)
+
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 The game is still in its alpha stages and is being actively developed by me. For this game I am:
