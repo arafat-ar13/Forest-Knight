@@ -7,6 +7,7 @@ import arcade
 import arcade.gui
 from arcade.draw_commands import draw_lrtb_rectangle_filled
 from arcade.gui import UIManager
+from arcade.gui.elements.image_button import UIImageButton
 from arcade.texture import load_texture
 from arcade.window_commands import start_render
 
@@ -61,10 +62,28 @@ class View(arcade.View):
 
         # Setting up button textures
         self.up_button = load_texture(f"{IMAGES_DIR}/gui/up_button.png")
+        self.down_button = load_texture(f"{IMAGES_DIR}/gui/down_button.png")
         self.right_button = load_texture(f"{IMAGES_DIR}/gui/right_button.png")
         self.left_button = load_texture(f"{IMAGES_DIR}/gui/left_button.png")
         self.space_bar = load_texture(f"{IMAGES_DIR}/gui/space_bar.png")
         self.lime_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
+
+        # Setting up 'unpressed' textures of those buttons
+        self.up_button_unpressed = load_texture(
+            f"{IMAGES_DIR}/gui/up_button_unpressed.png"
+        )
+        self.down_button_unpressed = load_texture(
+            f"{IMAGES_DIR}/gui/down_button_unpressed.png"
+        )
+        self.right_button_unpressed = load_texture(
+            f"{IMAGES_DIR}/gui/right_button_unpressed.png"
+        )
+        self.left_button_unpressed = load_texture(
+            f"{IMAGES_DIR}/gui/left_button_unpressed.png"
+        )
+        self.space_bar_unpressed = load_texture(
+            f"{IMAGES_DIR}/gui/space_bar_unpressed.png"
+        )
 
         # Setting up our background
         self.background = load_texture(
@@ -220,15 +239,102 @@ class InstructionsView(View):
 
         self.game_view = game_view
 
+        # Store a semitransparent color to use as an overlay
+        self.fill_color = arcade.make_transparent_color(
+            arcade.color.WHITE, transparency=150
+        )
+
+    def on_show(self):
+        """Code that is run when this view is activated"""
+
+        # Adding a 'back button' that allows to close this view
+        back_button = self.left_button
+        button = ViewChangingButton(
+            center_x=50,
+            center_y=50,
+            normal_texture=back_button,
+            onclick_view=TitleView,
+            game_view=self.game_view,
+            window=self.window,
+            width=50,
+            height=50,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Creating a dictionary of the four arrow keys so that they can be created easily with a loop
+        self.movement_butts: dict[int, dict] = {
+            arcade.key.UP: {
+                "normal_texture": self.up_button_unpressed,
+                "hovered_texture": self.up_button,
+                "coords": (210, 480),
+            },
+            arcade.key.DOWN: {
+                "normal_texture": self.down_button_unpressed,
+                "hovered_texture": self.down_button,
+                "coords": (210, 380),
+            },
+            arcade.key.LEFT: {
+                "normal_texture": self.left_button_unpressed,
+                "hovered_texture": self.left_button,
+                "coords": (110, 380),
+            },
+            arcade.key.RIGHT: {
+                "normal_texture": self.right_button_unpressed,
+                "hovered_texture": self.right_button,
+                "coords": (310, 380),
+            },
+        }
+
+        self.butt_dict = {}
+
+        for butt_type in self.movement_butts.keys():
+            button = UIImageButton(
+                normal_texture=self.movement_butts.get(butt_type).get("normal_texture"),
+                hover_texture=self.movement_butts.get(butt_type).get("hovered_texture"),
+                center_x=self.movement_butts.get(butt_type).get("coords")[0],
+                center_y=self.movement_butts.get(butt_type).get("coords")[1],
+            )
+            button.scale = 0.5
+            self.butt_dict[butt_type] = button
+            self.ui_manager.add_ui_element(button)
+
+        space_bar = UIImageButton(
+            normal_texture=self.space_bar_unpressed,
+            hover_texture=self.space_bar,
+            center_x=780,
+            center_y=420,
+        )
+        space_bar.scale = 0.5
+        self.butt_dict[arcade.key.SPACE] = space_bar
+        self.ui_manager.add_ui_element(space_bar)
+
+        return super().on_show()
+
     def on_key_press(self, symbol: int, modifiers: int):
-        """
-        Code that allows escaping from the Instructions View when the Escape key is pressed
-        """
-        if symbol == arcade.key.ESCAPE:
-            title_view = TitleView(self.game_view)
-            self.window.show_view(title_view)
+        """Illuminate each button when the corresponding arrow key is pressed"""
+        for butt_type in self.movement_butts.keys():
+            if symbol == butt_type:
+                butt: UIImageButton = self.butt_dict.get(butt_type)
+                butt.on_hover()
+
+        if symbol == arcade.key.SPACE:
+            butt: UIImageButton = self.butt_dict.get(symbol)
+            butt.on_hover()
 
         return super().on_key_press(symbol, modifiers)
+
+    def on_key_release(self, symbol: int, modifiers: int):
+        """Stop illuminating the button when the corresponding arrow key is released"""
+        for butt_type in self.movement_butts.keys():
+            if symbol == butt_type:
+                butt: UIImageButton = self.butt_dict.get(butt_type)
+                butt.on_unhover()
+
+        if symbol == arcade.key.SPACE:
+            butt: UIImageButton = self.butt_dict.get(symbol)
+            butt.on_unhover()
+
+        return super().on_key_release(symbol, modifiers)
 
     def on_draw(self):
         """Draw instructions on the screen"""
@@ -243,43 +349,43 @@ class InstructionsView(View):
             self.background,
         )
 
+        # Blur the background
+        draw_lrtb_rectangle_filled(
+            left=self.game_view.view_left,
+            right=self.game_view.view_left + SCREEN_WIDTH,
+            top=self.game_view.view_bottom + SCREEN_HEIGHT,
+            bottom=self.game_view.view_bottom,
+            color=self.fill_color,
+        )
+
         # Drawing Instructions for Knight Movement and Jump
         arcade.draw_text(
-            "Knight Movement and Jump",
+            "Knight Movement",
             start_x=25,
             start_y=550,
             color=arcade.color.CHINESE_VIOLET,
-            font_size=20,
+            font_size=50,
+            font_name=f"{FONTS_DIR}/FirstJob.ttf",
         )
-        arcade.draw_texture_rectangle(
-            center_x=165, center_y=450, width=50, height=50, texture=self.right_button
-        )  # Right arrow
-        arcade.draw_texture_rectangle(
-            center_x=140, center_y=500, width=50, height=50, texture=self.up_button
-        )  # Up arrow
-        arcade.draw_texture_rectangle(
-            center_x=115, center_y=450, width=50, height=50, texture=self.left_button
-        )  # Left arrow
 
         # Drawing instructions for Knight's attack
         arcade.draw_text(
-            "Attack enemies",
-            start_x=780,
+            "Knight Attack",
+            start_x=580,
             start_y=550,
             color=arcade.color.CHINESE_VIOLET,
-            font_size=20,
+            font_size=50,
+            font_name=f"{FONTS_DIR}/FirstJob.ttf",
         )
-        arcade.draw_texture_rectangle(
-            center_x=855, center_y=480, width=100, height=50, texture=self.space_bar
-        )  # Space Bar
 
-        # Go back to Title Screen
+        # Drawing a small hint
         arcade.draw_text(
-            "Press Esc to go back",
-            start_x=320,
-            start_y=20,
-            color=arcade.color.CHINESE_VIOLET,
-            font_size=35,
+            "*Press corresponding keys to see some light",
+            start_x=540,
+            start_y=50,
+            color=arcade.color.BLUE_SAPPHIRE,
+            font_size=17,
+            font_name=f"{FONTS_DIR}/Wooden Log.ttf",
         )
 
         return super().on_draw()
@@ -460,7 +566,7 @@ class CreditsView(View):
             center_x=(SCREEN_WIDTH // 2) - 200 + 580,
             center_y=(SCREEN_HEIGHT // 2) - 280,
             normal_texture=self.python_logo,
-            link="https://python.org"
+            link="https://python.org",
         )
         python_button.scale = 0.2
         self.ui_manager.add_ui_element(python_button)

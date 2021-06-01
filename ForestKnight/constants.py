@@ -4,7 +4,7 @@
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 650
 GAME_TITLE = "Forest Knight"
-GAME_VERSION = "0.7.8"
+GAME_VERSION = "0.7.9"
 DEVELOPER = "Arafat Khan"
 
 # Constants to hold to path to common directories
