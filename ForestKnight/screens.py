@@ -11,44 +11,16 @@ from arcade.gui.elements.image_button import UIImageButton
 from arcade.texture import load_texture
 from arcade.window_commands import start_render
 
-from ForestKnight.constants import (
-    DEVELOPER,
-    FONTS_DIR,
-    GAME_VERSION,
-    IMAGES_DIR,
-    SCREEN_HEIGHT,
-    SCREEN_WIDTH,
+from ForestKnight.constants import FONTS_DIR, IMAGES_DIR, SCREEN_HEIGHT, SCREEN_WIDTH
+from ForestKnight.game_details import DEVELOPER, GAME_TITLE, GAME_VERSION
+from ForestKnight.game_saving_utility import first_time, load_game_screen
+from ForestKnight.gui import (
+    ExitButton,
+    GameSavingButton,
+    Label,
+    LinkButton,
+    ViewChangingButton,
 )
-from ForestKnight.game_saving_utility import create_data_dir, load_game
-from ForestKnight.gui import Label, LinkButton, ViewChangingButton
-
-
-def load_game_screen(window: arcade.Window, game_view: arcade.View):
-    """
-    Function that loads the actual game screen after reading available data from the saved file
-    """
-    gameview = game_view
-    # Checking if the data directory exists or not. If not, create one
-    create_data_dir()
-
-    # Trying to load from a save file
-    loaded_data = load_game()
-    try:
-        # Since 'level' is always saved we try to retrive it first
-        level = loaded_data["level"]
-        first_time = False
-    except:
-        # If we're unable to retrieve it, it means the game is being run for the first time
-        level = 1
-        first_time = True
-
-    if first_time:
-        gameview.setup(level=level)
-        print("Game running for the first time")
-    else:
-        gameview.setup(level=level, load_game=True, loaded_game_data=loaded_data)
-
-    window.show_view(gameview)
 
 
 class View(arcade.View):
@@ -121,23 +93,50 @@ class TitleView(View):
     def on_show(self):
         self.ui_manager.purge_ui_elements()
 
-        # Adding 'Game Start' button
+        # Checking if a saved game exists. If one does, we'll give the option to either
+        # continue or start a new game. If not, we'll only have an option to start a new game
+        if not first_time():
+            # Adding 'Continue' button
+            start_button = self.lime_button
+            button = ViewChangingButton(
+                center_x=SCREEN_WIDTH // 2,
+                center_y=410,
+                normal_texture=start_button,
+                onclick_view=LoadingView,
+                game_view=self.game_view,
+                window=self.window,
+            )
+            self.ui_manager.add_ui_element(button)
+
+            # Adding 'Continue' label
+            label = Label(
+                "Continue",
+                center_x=SCREEN_WIDTH // 2,
+                center_y=410,
+                color=arcade.color.FIRE_ENGINE_RED,
+                on_top_of_button=True,
+                parent_button=button,
+            )
+            self.ui_manager.add_ui_element(label)
+
+        # Adding 'New Game' button
         start_button = self.lime_button
         button = ViewChangingButton(
             center_x=SCREEN_WIDTH // 2,
-            center_y=280,
+            center_y=320,
             normal_texture=start_button,
             onclick_view=LoadingView,
             game_view=self.game_view,
             window=self.window,
+            new_game=True,
         )
         self.ui_manager.add_ui_element(button)
 
-        # Adding 'Game Start' label
+        # Adding 'New Game' label
         label = Label(
-            "Start Game",
+            "New Game",
             center_x=SCREEN_WIDTH // 2,
-            center_y=280,
+            center_y=320,
             color=arcade.color.FIRE_ENGINE_RED,
             on_top_of_button=True,
             parent_button=button,
@@ -148,7 +147,7 @@ class TitleView(View):
         instructions_button = self.lime_button
         button = ViewChangingButton(
             center_x=SCREEN_WIDTH // 2,
-            center_y=190,
+            center_y=230,
             normal_texture=instructions_button,
             onclick_view=InstructionsView,
             game_view=self.game_view,
@@ -160,7 +159,7 @@ class TitleView(View):
         label = Label(
             "Instructions",
             center_x=SCREEN_WIDTH // 2,
-            center_y=190,
+            center_y=230,
             color=arcade.color.FIRE_ENGINE_RED,
             on_top_of_button=True,
             parent_button=button,
@@ -171,7 +170,7 @@ class TitleView(View):
         credits_button = self.lime_button
         button = ViewChangingButton(
             center_x=SCREEN_WIDTH // 2,
-            center_y=100,
+            center_y=140,
             normal_texture=credits_button,
             onclick_view=CreditsView,
             game_view=self.game_view,
@@ -183,7 +182,28 @@ class TitleView(View):
         label = Label(
             "Credits",
             center_x=SCREEN_WIDTH // 2,
-            center_y=100,
+            center_y=140,
+            color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Adding 'Exit Game' button
+        exit_button = self.lime_button
+        button = ExitButton(
+            center_x=SCREEN_WIDTH // 2,
+            center_y=50,
+            normal_texture=exit_button,
+        )
+        button.scale = 0.5
+        self.ui_manager.add_ui_element(button)
+
+        # Adding 'Exit Game' label
+        label = Label(
+            "Exit Game",
+            center_x=SCREEN_WIDTH // 2,
+            center_y=50,
             color=arcade.color.FIRE_ENGINE_RED,
             on_top_of_button=True,
             parent_button=button,
@@ -206,7 +226,7 @@ class TitleView(View):
 
         # Drawing game name
         arcade.draw_text(
-            "Welcome to Forest Knight",
+            f"Welcome to {GAME_TITLE}",
             start_x=SCREEN_WIDTH // 2,
             start_y=SCREEN_HEIGHT - 100,
             color=arcade.color.CHINESE_VIOLET,
@@ -406,28 +426,114 @@ class PauseView(arcade.View):
             arcade.color.WHITE, transparency=150
         )
 
+        self.ui_manager = UIManager()
+
+        self.viewport_coords = None
+
+        # Setting up our background
+        self.background = load_texture(
+            f"{IMAGES_DIR}/backgrounds/backgroundColorForest.png"
+        )
+
+    def on_show(self):
+
+        self.viewport_coords = arcade.get_viewport()
+
+        arcade.set_viewport(0, SCREEN_WIDTH - 1, 0, SCREEN_HEIGHT - 1)
+        self.ui_manager.purge_ui_elements()
+
+        lime_button = load_texture(f"{IMAGES_DIR}/gui/lime_button.png")
+
+        # Creating 'Save Game' button
+        save_game_coords = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        button = GameSavingButton(
+            center_x=save_game_coords[0],
+            center_y=save_game_coords[1],
+            normal_texture=lime_button,
+            game_view=self.game_view,
+            viewport_coords=self.viewport_coords,
+        )
+        button.scale = 0.5
+        self.ui_manager.add_ui_element(button)
+
+        # Creating 'Save Game' label
+        label = Label(
+            text="Save Game",
+            center_x=save_game_coords[0],
+            center_y=save_game_coords[1],
+            color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Creating 'Main Menu' button
+        main_menu_coords = (SCREEN_WIDTH // 2, save_game_coords[1] - 100)
+        button = ViewChangingButton(
+            center_x=main_menu_coords[0],
+            center_y=main_menu_coords[1],
+            normal_texture=lime_button,
+            game_view=self.game_view,
+            window=self.window,
+            onclick_view=TitleView,
+            delete_sprites=True,
+        )
+        self.ui_manager.add_ui_element(button)
+
+        # Creating 'Main Menu' label
+        label = Label(
+            text="Main Menu",
+            center_x=main_menu_coords[0],
+            center_y=main_menu_coords[1],
+            color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        # Creating 'Exit Game' button
+        exit_game_coords = (SCREEN_WIDTH // 2, save_game_coords[1] - 200)
+        button = ExitButton(
+            center_x=exit_game_coords[0],
+            center_y=exit_game_coords[1],
+            normal_texture=lime_button,
+        )
+        button.scale = 0.5
+        self.ui_manager.add_ui_element(button)
+
+        # Creating 'Exit Game' label
+        label = Label(
+            text="Exit Game",
+            center_x=exit_game_coords[0],
+            center_y=exit_game_coords[1],
+            color=arcade.color.FIRE_ENGINE_RED,
+            on_top_of_button=True,
+            parent_button=button,
+        )
+        self.ui_manager.add_ui_element(label)
+
+        return super().on_show()
+
+    def on_hide_view(self):
+
+        arcade.set_viewport(*self.viewport_coords)
+
+        self.ui_manager.unregister_handlers()
+
+        return super().on_hide_view()
+
     def on_draw(self):
         """Draw the 'Paused' text on the screen"""
 
-        self.game_view.on_draw()
+        # self.game_view.update_viewport()
 
-        # Now create a filled rect that covers the current viewport
-        # We get the viewport size from the game view
-        draw_lrtb_rectangle_filled(
-            left=self.game_view.view_left,
-            right=self.game_view.view_left + SCREEN_WIDTH,
-            top=self.game_view.view_bottom + SCREEN_HEIGHT,
-            bottom=self.game_view.view_bottom,
-            color=self.fill_color,
-        )
-
-        # Now show the Pause text
-        arcade.draw_text(
-            "PAUSED P TO CONTINUE",
-            start_x=self.game_view.view_left + 180,
-            start_y=self.game_view.view_bottom + 300,
-            color=arcade.color.INDIGO,
-            font_size=40,
+        # Drawing the background image
+        arcade.draw_texture_rectangle(
+            (SCREEN_WIDTH // 2),
+            (SCREEN_HEIGHT // 2),
+            SCREEN_WIDTH,
+            SCREEN_HEIGHT,
+            self.background,
         )
 
         return super().on_draw()
@@ -435,7 +541,7 @@ class PauseView(arcade.View):
     def on_key_press(self, symbol, modifiers):
         """Switch off PauseView by again pressing 'P'"""
 
-        if symbol == arcade.key.P:
+        if symbol == arcade.key.ESCAPE:
             self.game_view.knight.change_x = 0
             self.game_view.knight.change_y = 0
             self.window.show_view(self.game_view)

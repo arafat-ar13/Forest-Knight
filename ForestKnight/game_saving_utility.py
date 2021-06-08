@@ -2,7 +2,9 @@
 
 import os
 import shelve
+import shutil
 
+import arcade
 from arcade.sprite_list import SpriteList
 
 from ForestKnight.constants import SAVED_DATA_DIR
@@ -12,6 +14,15 @@ def create_data_dir():
     """Function to make sure that the saved data directory exists"""
     if not os.path.exists(f"{SAVED_DATA_DIR}/"):
         os.mkdir(f"{SAVED_DATA_DIR}/")
+
+
+def new_game() -> None:
+    """
+    Function that deletes existing save files and starts a new game
+    """
+    shutil.rmtree(f"{SAVED_DATA_DIR}/")
+
+    print("Existing game data deleted")
 
 
 def save_game(data: dict):
@@ -47,6 +58,46 @@ def load_game() -> dict:
     print("Game loaded successfully!")
 
     return loaded_data
+
+
+def first_time() -> bool:
+    """
+    Function that checks if the game is being run for the first time or not
+    """
+    ft = True
+
+    data = load_game()
+
+    if os.path.exists(f"{SAVED_DATA_DIR}/"):
+        if data.get("level") is not None:
+            # Since 'level' is ALWAYS saved, if None is returned
+            # it means that no save has yet been made and if None is
+            # not returned, it means that saves have been made previously
+            ft = False
+
+    return ft
+
+
+def load_game_screen(window: arcade.Window, gameview: arcade.View):
+    """
+    Function that loads the actual game screen after reading available data from the saved file
+    """
+
+    # Checking if the data directory exists or not. If not, create one
+    create_data_dir()
+
+    # Trying to load from a save file
+    loaded_data = load_game()
+
+    if first_time():
+        level = 1
+        gameview.setup(level=level)
+        print("Game running for the first time")
+    else:
+        level = loaded_data.get("level")
+        gameview.setup(level=level, load_game=True, loaded_game_data=loaded_data)
+
+    window.show_view(gameview)
 
 
 def load_collectibles(

@@ -24,7 +24,6 @@ from ForestKnight.constants import (
     TOP_VIEWPORT_MARGIN,
     ZOMBIE_MALE_LEVEL_1_POSITIONS,
 )
-from ForestKnight.game_saving_utility import save_game
 from ForestKnight.helper_functions import level_loader
 from ForestKnight.screens import PauseView
 
@@ -66,6 +65,9 @@ class ForestKnightView(arcade.View):
         # Level
         self.level = None
 
+        # Other variables
+        self.cur_viewport_coords = None
+
     def setup(self, level: int, load_game: bool = False, loaded_game_data: dict = None):
         """
         Method that sets up the given level of the game.
@@ -76,16 +78,18 @@ class ForestKnightView(arcade.View):
         self.enemy_sprites = SpriteList()
 
         self.collectibles_to_omit = []
+        self.cur_viewport_coords = ()
 
         self.level = level
 
-        self.setup_sprites(self.level)
         self.setup_characters()
 
         # We'll only load the game if this is NOT the first time playing it
         if load_game:
             self.load_game_data(loaded_game_data)
+            self.setup_correct_viewport()
 
+        self.setup_sprites(self.level)
         self.update_viewport()
         self.setup_physics_engine()
         self.setup_sounds()
@@ -142,6 +146,15 @@ class ForestKnightView(arcade.View):
                 f"{IMAGES_DIR}/backgrounds/BG.png"
             )
 
+    def setup_correct_viewport(self):
+        """Method that sets up the viewports that was saved"""
+        arcade.set_viewport(*self.cur_viewport_coords)
+
+    def delete_all_sprites(self):
+        """Deletes all the game sprites when switching to Main Menu to save on resources"""
+
+        self.knight.kill()
+
     def on_key_press(self, symbol: int, modifiers: int):
         """Method that handles what happens when a key is pressed down"""
         # Knight movement and attack
@@ -176,14 +189,8 @@ class ForestKnightView(arcade.View):
             self.knight.is_moving = True
 
         # Other key-based actions
-        if symbol == arcade.key.Q:
-            arcade.close_window()
-
-        if symbol == arcade.key.P:
+        if symbol == arcade.key.ESCAPE:
             self.pause()
-
-        if symbol == arcade.key.G:
-            self.gen_game_data()
 
         if symbol == arcade.key.V:
             print(self.knight.position)
@@ -221,33 +228,6 @@ class ForestKnightView(arcade.View):
         pause_view = PauseView(self)
         self.window.show_view(pause_view)
 
-    def gen_game_data(self):
-        """
-        Method that generates all the values that need to be saved
-        and then calls the function from the game saving utility for the data
-        to be actually saved on the hard disk
-        """
-        level = self.level
-        health = self.knight.health
-        score = self.knight.score
-        pos = self.knight.position
-        cur_texture = self.knight.texture
-        knight_state = self.knight.state
-        collectibles_to_omit = self.collectibles_to_omit
-
-        data_dict = {
-            "level": level,
-            "health": health,
-            "score": score,
-            "position": pos,
-            "texture": cur_texture,
-            "knight_state": knight_state,
-            "collectibles_to_omit": collectibles_to_omit,
-        }
-
-        # Calling function from gave saving utility
-        save_game(data=data_dict)
-
     def load_game_data(self, data: dict):
         """
         Method that takes all the data from the loader function from the game saving utility and correctly sets up the game.
@@ -259,6 +239,7 @@ class ForestKnightView(arcade.View):
         self.knight.score = data["score"]
         self.knight.texture = data["texture"]
         self.collectibles_to_omit = data["collectibles_to_omit"]
+        self.cur_viewport_coords = data["viewport_coords"]
 
     def update_viewport(self):
         """Method that manages and updates the viewport according to where the Knight is"""
@@ -342,7 +323,7 @@ class ForestKnightView(arcade.View):
 
         return super().on_update(delta_time)
 
-    def on_draw(self):
+    def on_draw(self, draw_stats=True):
         """
         We actually have to draw to the display to show anything on the screen.
         This method handles all the drawing in the game
@@ -368,20 +349,21 @@ class ForestKnightView(arcade.View):
         self.foregrounds.draw()
 
         # Drawing the Knight's stats
-        arcade.draw_text(
-            f"Score: {self.knight.score}",
-            self.view_left,
-            self.view_bottom + 15,
-            arcade.color.CHROME_YELLOW,
-            15,
-        )
+        if draw_stats:
+            arcade.draw_text(
+                f"Score: {self.knight.score}",
+                self.view_left,
+                self.view_bottom + 15,
+                arcade.color.CHROME_YELLOW,
+                15,
+            )
 
-        arcade.draw_text(
-            f"Health: {self.knight.health}",
-            self.view_left,
-            self.view_bottom,
-            arcade.color.ROSE_RED,
-            15,
-        )
+            arcade.draw_text(
+                f"Health: {self.knight.health}",
+                self.view_left,
+                self.view_bottom,
+                arcade.color.ROSE_RED,
+                15,
+            )
 
         return super().on_draw()
